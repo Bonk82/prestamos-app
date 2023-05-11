@@ -1,18 +1,18 @@
 import { createContext, useContext, useState } from "react";
 import { supabase } from "../supabase/client";
 
-export const TaskContext = createContext();
+export const SupaContext = createContext();
 
-export const useTasks = () => {
-  const context = useContext(TaskContext);
+export const useSupa = () => {
+  const context = useContext(SupaContext);
   if (context === undefined) {
-    throw new Error("useTasks must be used within a TaskProvider");
+    throw new Error("useSupa debe ser usado en un ContextProvider");
   }
   return context;
 };
 
 // eslint-disable-next-line react/prop-types
-export const TaskContextProvider = ({ children }) => {
+export const SupaContextProvider = ({ children }) => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [adding, setAdding] = useState(false);
@@ -36,6 +36,13 @@ export const TaskContextProvider = ({ children }) => {
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
+    })
+    console.log(data,error);
+  }
+
+  async function signInWithGoogle() {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
     })
     console.log(data,error);
   }
@@ -140,7 +147,7 @@ export const TaskContextProvider = ({ children }) => {
   };
 
   return (
-    <TaskContext.Provider
+    <SupaContext.Provider
       value={{
         tasks,
         getTasks,
@@ -151,10 +158,11 @@ export const TaskContextProvider = ({ children }) => {
         adding,
         loginWithMagicLink,
         signInWithEmail,
+        signInWithGoogle,
         logout,
       }}
     >
       {children}
-    </TaskContext.Provider>
+    </SupaContext.Provider>
   );
 };

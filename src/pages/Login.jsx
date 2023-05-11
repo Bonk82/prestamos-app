@@ -12,6 +12,8 @@ import Container from '@mui/material/Container';
 import { useEffect } from 'react';
 import { supabase } from '../supabse/client';
 import { useNavigate } from "react-router-dom";
+import { useSupa } from "../context/supabaseContextProvider";
+import GoogleIcon from '@mui/icons-material/Google';
 
 function Copyright(props) {
   return (
@@ -29,15 +31,19 @@ function Copyright(props) {
 
 const Login = () => {
   const navigate = useNavigate();
+  const {loading,signInWithEmail,signInWithGoogle} = useSupa;
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+    signInWithEmail(data.get('email'),data.get('password'))
     console.log({
       email: data.get('email'),
       password: data.get('password'),
     });
   };
+
+
 
   useEffect(() => {
     if (supabase.auth.user()) {
@@ -61,7 +67,7 @@ const Login = () => {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          Log In
         </Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           <TextField
@@ -92,9 +98,13 @@ const Login = () => {
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ mt: 3, mb: 2 }}
+            className='gradient-primary'
+            sx={{ mt: 3, mb: 3 }}
+            disabled ={loading}
           >
-            Sign In
+            Ingresar
+          </Button>
+          <Button type='button' fullWidth variant='contained' startIcon={<GoogleIcon/>} onClick={signInWithGoogle} sx={{mb:2}}> Googgle
           </Button>
           {/* <Grid container>
             <Grid item xs>
