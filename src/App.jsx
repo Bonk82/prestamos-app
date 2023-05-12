@@ -1,6 +1,6 @@
 
 import { Routes, Route, useNavigate } from "react-router-dom";
-import { supabase } from "./supabase/client";
+import { supabase } from "./supabase/client.js";
 import './App.css'
 import { useEffect } from "react";
 import { Navbar } from "./components/Navbar";
@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import { NotFound } from "./pages/NotFound";
 import Prestamo from "./pages/Prestamo";
 import Dashboard from "./pages/Dashboard";
+import { SupabaseContextProvider } from "./context/SupabaseContextProvider.jsx";
 
 function App() {
   const navigate = useNavigate();
@@ -27,13 +28,15 @@ function App() {
     <>
       <Navbar />
       <div className="container">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/prestamo" element={<Prestamo />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <SupabaseContextProvider>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/prestamo" element={<Prestamo />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </SupabaseContextProvider>
       </div>
     </>
   )

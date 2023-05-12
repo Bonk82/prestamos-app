@@ -10,10 +10,11 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { useEffect } from 'react';
-import { supabase } from '../supabse/client';
+import { supabase } from '../supabase/client';
 import { useNavigate } from "react-router-dom";
-import { useSupa } from "../context/supabaseContextProvider";
+import { useSupa } from "../context/SupaContext";
 import GoogleIcon from '@mui/icons-material/Google';
+// import supabase from '../supabase/client'
 
 function Copyright(props) {
   return (
@@ -22,31 +23,26 @@ function Copyright(props) {
       {/* <Link color="inherit" href="https://mui.com/">
         Your Website
       </Link>{' '} */}
-      BonkApp
+      BonkApp 
       {new Date().getFullYear()}
       {'.'}
     </Typography>
   );
 }
-
 const Login = () => {
+  const { loading, signInWithGoogle, signInWithEmail } = useSupa();
   const navigate = useNavigate();
-  const {loading,signInWithEmail,signInWithGoogle} = useSupa;
+
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     signInWithEmail(data.get('email'),data.get('password'))
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
   };
 
-
-
   useEffect(() => {
-    if (supabase.auth.user()) {
+    if (supabase.auth.getUser()) {
+      console.log(supabase.auth.getUser());
       navigate("/");
     }
     console.log("called");

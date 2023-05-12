@@ -1,19 +1,13 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useState } from "react";
+// import { useState } from "react";
 import { supabase } from "../supabase/client";
+// import {SupaContext} from './contexto'
 
 export const SupaContext = createContext();
 
-export const useSupa = () => {
-  const context = useContext(SupaContext);
-  if (context === undefined) {
-    throw new Error("useSupa debe ser usado en un ContextProvider");
-  }
-  return context;
-};
-
 // eslint-disable-next-line react/prop-types
-export const SupaContextProvider = ({ children }) => {
-  const [tasks, setTasks] = useState([]);
+export const SupabaseContextProvider = ({ children }) => {
+  const [clientes, setClientes] = useState([]);
   const [loading, setLoading] = useState(false);
   const [adding, setAdding] = useState(false);
 
@@ -24,7 +18,7 @@ export const SupaContextProvider = ({ children }) => {
       if (error) {
         throw error;
       }
-      alert("check your email for the magic link");
+      alert("revisa tu correo para usar el enlace mágico");
     } catch (error) {
       alert(error.message);
     } finally {
@@ -38,9 +32,9 @@ export const SupaContextProvider = ({ children }) => {
       password,
     })
     console.log(data,error);
-  }
+  };
 
-  async function signInWithGoogle() {
+  const signInWithGoogle = async ()=> {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
     })
@@ -61,48 +55,48 @@ export const SupaContextProvider = ({ children }) => {
     }
   };
 
-  const createTask = async (taskName) => {
+  const createCliente = async (nombre,apodo,fecha_nacimiento,ci,telefonos) => {
     setAdding(true);
     try {
-      const user = supabase.auth.user();
-
-      const { error, data } = await supabase.from("tasks").insert({
-        name: taskName,
-        userId: user.id,
+      const usuario = await supabase.auth.getUser()
+      console.log(usuario);
+      const { error, data } = await supabase.from('cliente').insert({
+        nombre,
+        apodo,
+        fecha_nacimiento,
+        ci,
+        telefonos,
+        // id:usuario.data.user.id
       });
 
-      setTasks([...tasks, ...data]);
-
+      setClientes([...clientes, ...data]);
       if (error) {
         throw error;
       }
     } catch (error) {
-      alert(error.error_description || error.message);
+      alert('en ins'+ error.error_description || error.message);
     } finally {
       setAdding(false);
     }
   };
 
-  const getTasks = async (done = false) => {
+  const getClientes = async () => {
     setLoading(true);
-
-    const user = supabase.auth.user();
-
+    // const user = supabase.auth.user();
     try {
-      const { error, data } = await supabase
-        .from("tasks")
-        .select("id, name, done")
-        .eq("userId", user.id)
-        .eq("done", done)
+      const { data, error } = await supabase
+        .from("cliente")
+        .select("id, nombre, apodo, fecha_nacimiento,ci,telefonos")
+        // .eq("done", done)
         .order("id", { ascending: false });
 
       if (error) {
         throw error;
       }
-
-      setTasks(data);
+      console.log('leyendo',data);
+      setClientes(data);
     } catch (error) {
-      alert(error.error_description || error.message);
+      alert('en get'+ error.error_description || error.message);
     } finally {
       setLoading(false);
     }
@@ -120,7 +114,7 @@ export const SupaContextProvider = ({ children }) => {
         throw error;
       }
 
-      setTasks(tasks.filter((task) => task.id !== data[0].id));
+      setClientes(clientes.filter((task) => task.id !== data[0].id));
     } catch (error) {
       alert(error.error_description || error.message);
     }
@@ -140,7 +134,7 @@ export const SupaContextProvider = ({ children }) => {
         throw error;
       }
 
-      setTasks(tasks.filter((task) => task.id !== data[0].id));
+      setClientes(clientes.filter((task) => task.id !== data[0].id));
     } catch (error) {
       alert(error.error_description || error.message);
     }
@@ -149,9 +143,9 @@ export const SupaContextProvider = ({ children }) => {
   return (
     <SupaContext.Provider
       value={{
-        tasks,
-        getTasks,
-        createTask,
+        clientes,
+        getClientes,
+        createCliente,
         updateTasks,
         deleteTask,
         loading,
