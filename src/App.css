@@ -1,8 +1,10 @@
 #root {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
+  /* padding: 2rem; */
   text-align: center;
+  min-width: 320px;
+  --primary:'#ad5389';
 }
 
 .logo {
@@ -52,4 +54,9 @@
 }
 .gradient-primary:hover {
   background: linear-gradient(to right, #77395e, #1d0829)!important;
+}
+
+.navbar{
+  font-family:'monospace';
+  background-color:var(--primary);
 }

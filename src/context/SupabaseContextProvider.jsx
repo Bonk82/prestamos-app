@@ -10,6 +10,7 @@ export const SupabaseContextProvider = ({ children }) => {
   const [clientes, setClientes] = useState([]);
   const [loading, setLoading] = useState(false);
   const [adding, setAdding] = useState(false);
+  const [avatar, setAvatar] = useState('');
 
   const loginWithMagicLink = async (email) => {
     setLoading(true);
@@ -55,11 +56,24 @@ export const SupabaseContextProvider = ({ children }) => {
     }
   };
 
+  const getUser = async () =>{
+    try {
+      const usuario = await supabase.auth.getUser();
+      console.log('ingresanbdo',usuario);
+      usuario.data.user.identities.forEach(e => {
+        e.identity_data.picture ? setAvatar(e.identity_data.picture):'C'
+        console.log('entroEach',avatar);
+      });
+    } catch (error) {
+      console.log('erro al cargar usuario',error);
+    }
+  }
+
   const createCliente = async (nombre,apodo,fecha_nacimiento,ci,telefonos) => {
     setAdding(true);
     try {
-      const usuario = await supabase.auth.getUser()
-      console.log(usuario);
+      // const usuario = await supabase.auth.getUser()
+      // console.log(usuario);
       const { error, data } = await supabase.from('cliente').insert({
         nombre,
         apodo,
@@ -68,13 +82,14 @@ export const SupabaseContextProvider = ({ children }) => {
         telefonos,
         // id:usuario.data.user.id
       });
-
-      setClientes([...clientes, ...data]);
+      console.log('llega aca',error,data,clientes);
+      // setClientes([...clientes, ...data]);
       if (error) {
         throw error;
       }
     } catch (error) {
-      alert('en ins'+ error.error_description || error.message);
+      // alert('en ins'+ error.error_description || error.message);
+      alert('en ins'+ error.error_description || error.message || error);
     } finally {
       setAdding(false);
     }
@@ -93,10 +108,9 @@ export const SupabaseContextProvider = ({ children }) => {
       if (error) {
         throw error;
       }
-      console.log('leyendo',data);
       setClientes(data);
     } catch (error) {
-      alert('en get'+ error.error_description || error.message);
+      alert(error.error_description || error.message || error);
     } finally {
       setLoading(false);
     }
@@ -154,6 +168,8 @@ export const SupabaseContextProvider = ({ children }) => {
         signInWithEmail,
         signInWithGoogle,
         logout,
+        getUser,
+        avatar,
       }}
     >
       {children}

@@ -11,14 +11,19 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useSupa } from '../context/SupaContext';
 
-const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const pages = ['INICIO', 'DASHBOARD', 'PRESTAMOS'];
+const settings = ['PERFIL', 'BALANCE', 'SALIR'];
 
 export const Navbar = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
+  const navigate = useNavigate();
+  const {getUser,avatar} = useSupa();
+
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -27,17 +32,29 @@ export const Navbar = () => {
     setAnchorElUser(event.currentTarget);
   };
 
-  const handleCloseNavMenu = () => {
+  const handleCloseNavMenu = (e) => {
+    console.log(e.target.textContent);
     setAnchorElNav(null);
+    if(e.target.textContent === 'INICIO') navigate('/');
+    if(e.target.textContent === 'DASHBOARD'){
+      console.log('entrando' );
+      navigate('/dashboard');
+    } 
+    if(e.target.textContent === 'PRESTAMOS') navigate('/prestamo');
   };
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
 
+  useEffect(()=>{
+    getUser();
+    console.log('el av',avatar);
+  },[])
+
   return (
-    <AppBar position="static">
-      <Container maxWidth="xl">
+    <AppBar position="sticky">
+      <Container maxWidth="xl" sx={{fontFamily:'monospace',backgroundColor:'#ad5389'}}>
         <Toolbar disableGutters>
           <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
           <Typography
@@ -55,7 +72,7 @@ export const Navbar = () => {
               textDecoration: 'none',
             }}
           >
-            LOGO
+            PRESTAMOS
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -128,7 +145,7 @@ export const Navbar = () => {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar alt={avatar} src={avatar} sx={{backgroundColor:'antiquewhite'}} />
               </IconButton>
             </Tooltip>
             <Menu

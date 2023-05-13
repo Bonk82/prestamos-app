@@ -1,9 +1,9 @@
 import { createTheme } from '@mui/material/styles';
 import { green, orange, red } from '@mui/material/colors';
 import { lightBlue } from '@mui/material/colors';
-
+import { esES } from '@mui/material/locale';
 // Create a theme instance.
-const theme = createTheme({
+export const primeTheme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
@@ -24,7 +24,11 @@ const theme = createTheme({
     info: {
       main: lightBlue[300],
     },
+    persist: {
+        main: '#ad5389'
+    },
   },
-});
-
-export default theme;
+    typography:{
+        fontFamily:['monospace','arial'],
+    } 
+},esES);
