@@ -11,7 +11,7 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSupa } from '../context/SupaContext';
 
@@ -22,7 +22,7 @@ export const Navbar = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const navigate = useNavigate();
-  const {getUser,avatar} = useSupa();
+  const {avatar} = useSupa();
 
 
   const handleOpenNavMenu = (event) => {
@@ -46,11 +46,6 @@ export const Navbar = () => {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-
-  useEffect(()=>{
-    getUser();
-    console.log('el av',avatar);
-  },[])
 
   return (
     <AppBar position="sticky">

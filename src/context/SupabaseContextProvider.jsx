@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 // import { useState } from "react";
 import { supabase } from "../supabase/client";
 // import {SupaContext} from './contexto'
@@ -11,6 +11,10 @@ export const SupabaseContextProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [adding, setAdding] = useState(false);
   const [avatar, setAvatar] = useState('');
+
+  useEffect(()=>{
+    getUser();
+  },[])
 
   const loginWithMagicLink = async (email) => {
     setLoading(true);
