@@ -14,6 +14,7 @@ export const SupabaseContextProvider = ({ children }) => {
 
   useEffect(()=>{
     getUser();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
   const loginWithMagicLink = async (email) => {
