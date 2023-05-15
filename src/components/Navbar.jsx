@@ -11,8 +11,8 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate,useLocation } from 'react-router-dom';
 import { useSupa } from '../context/SupaContext';
 
 const pages = ['INICIO', 'DASHBOARD', 'PRESTAMOS'];
@@ -21,9 +21,17 @@ const settings = ['PERFIL', 'BALANCE', 'SALIR'];
 export const Navbar = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
+  const [mostrar, setMostrar] = useState(false)
   const navigate = useNavigate();
   const {avatar} = useSupa();
+  let location = useLocation();
 
+
+  useEffect(()=>{
+    console.log('la url',location.pathname);
+    if(!location.pathname.includes('login')) setMostrar(true)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[])
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -48,8 +56,9 @@ export const Navbar = () => {
   };
 
   return (
+    mostrar &&
     <AppBar position="sticky">
-      <Container maxWidth="xl" sx={{fontFamily:'monospace',backgroundColor:'#ad5389'}}>
+      <Container maxWidth="xl" sx={{fontFamily:'monospace',bgcolor:'primary.main'}}>
         <Toolbar disableGutters>
           <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
           <Typography

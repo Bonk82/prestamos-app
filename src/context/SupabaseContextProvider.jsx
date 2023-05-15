@@ -64,7 +64,7 @@ export const SupabaseContextProvider = ({ children }) => {
   const getUser = async () =>{
     try {
       const usuario = await supabase.auth.getUser();
-      console.log('ingresanbdo',usuario);
+      console.log('ingresando',usuario);
       usuario.data.user.identities.forEach(e => {
         e.identity_data.picture ? setAvatar(e.identity_data.picture):'C'
         console.log('entroEach',avatar);
@@ -85,16 +85,13 @@ export const SupabaseContextProvider = ({ children }) => {
         fecha_nacimiento,
         ci,
         telefonos,
-        // id:usuario.data.user.id
       });
       console.log('llega aca',error,data,clientes);
-      // setClientes([...clientes, ...data]);
       if (error) {
         throw error;
       }
     } catch (error) {
-      // alert('en ins'+ error.error_description || error.message);
-      alert('en ins'+ error.error_description || error.message || error);
+      alert(error.error_description || error.message || error);
     } finally {
       setAdding(false);
     }
@@ -114,6 +111,8 @@ export const SupabaseContextProvider = ({ children }) => {
         throw error;
       }
       setClientes(data);
+      console.log('los clientes',data);
+      // return data;
     } catch (error) {
       alert(error.error_description || error.message || error);
     } finally {
@@ -121,21 +120,19 @@ export const SupabaseContextProvider = ({ children }) => {
     }
   };
 
-  const updateTasks = async (id, updatedFields) => {
+  const updateCliente = async (id, updatedFields) => {
     try {
-      const user = supabase.auth.user();
+      // const user = supabase.auth.user();
       const { error, data } = await supabase
-        .from("tasks")
+        .from("cliente")
         .update(updatedFields)
-        .eq("userId", user.id)
-        .eq("id", id);
+        .eq("id", id)
       if (error) {
         throw error;
       }
-
-      setClientes(clientes.filter((task) => task.id !== data[0].id));
+      setClientes(clientes.filter((clientes) => clientes.id !== data[0].id));
     } catch (error) {
-      alert(error.error_description || error.message);
+      alert(error.error_description || error.message || error);
     }
   };
 
@@ -165,7 +162,7 @@ export const SupabaseContextProvider = ({ children }) => {
         clientes,
         getClientes,
         createCliente,
-        updateTasks,
+        updateCliente,
         deleteTask,
         loading,
         adding,

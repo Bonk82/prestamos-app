@@ -9,7 +9,7 @@ import Login from "./pages/Login";
 import { NotFound } from "./pages/NotFound";
 import Prestamo from "./pages/Prestamo";
 import Dashboard from "./pages/Dashboard";
-import {SupabaseContextProvider} from './context/SupabaseContextProvider.jsx'
+import {SupabaseContextProvider} from './context/SupabaseContextProvider'
 import { AppTheme } from "./themes/AppTheme";
 
 function App() {

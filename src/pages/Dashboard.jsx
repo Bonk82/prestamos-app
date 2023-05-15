@@ -1,16 +1,15 @@
 import { Button } from "@mui/material"
+import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
+import { AdminClient } from "../components/AdminClient";
 
 const Dashboard = () => {
   return (
     <div>
-      <h1>Dashboard</h1>
-      <Button variant="contained" className='gradient-primary'>Hello World custom gradient</Button>
-      <Button variant="contained">Hello World primary</Button>
-      <Button variant="contained" color='secondary'>Hello World secondary</Button>
-      <Button variant="contained" color='success'>Hello World success</Button>
-      <Button variant="contained" color='error'>Hello World error</Button>
-      <Button variant="contained" color='warning'>Hello World warning</Button>
-      <Button variant="contained" color='info'>Hello World warning</Button>
+      <label className="titulo">Dashboard</label><br />
+      <p>acá irán todo los componentes para ver los balances de dinero a gusto, puros componentes</p>
+      <Button variant="outlined" startIcon={<PersonAddAltIcon/>} color="primary">Registrar Prestamo</Button>
+      <Button variant="contained" startIcon={<PersonAddAltIcon/>} className="gradient-primary">Registrar Prestamo</Button>
+      <AdminClient/>
     </div>
     
   )

@@ -1,7 +1,7 @@
 
 const Prestamo = () => {
   return (
-    <div>Prestamo</div>
+    <div>EL historico y balance de prestamos por cliente</div>
   )
 }
 
