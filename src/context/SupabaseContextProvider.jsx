@@ -74,7 +74,7 @@ export const SupabaseContextProvider = ({ children }) => {
     }
   }
 
-  const createCliente = async (nombre,apodo,fecha_nacimiento,ci,telefonos) => {
+  const createCliente = async ({nombre,apodo,fecha_nacimiento,ci,telefonos}) => {
     setAdding(true);
     try {
       // const usuario = await supabase.auth.getUser()
@@ -112,7 +112,7 @@ export const SupabaseContextProvider = ({ children }) => {
       }
       setClientes(data);
       console.log('los clientes',data);
-      // return data;
+      return data;
     } catch (error) {
       alert(error.error_description || error.message || error);
     } finally {

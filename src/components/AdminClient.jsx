@@ -1,5 +1,5 @@
-import { Alert, Backdrop, Box, Button, CircularProgress, Container, Grid, IconButton, Slide, Snackbar, Typography } from "@mui/material"
-import { DataGrid,esES } from '@mui/x-data-grid';
+import { Alert, Backdrop, Box, Button, CircularProgress, Container, Grid, IconButton, Slide, Snackbar, TextField, Typography } from "@mui/material"
+import { DataGrid,GridCellEditStopReasons,esES } from '@mui/x-data-grid';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import SaveAsIcon from '@mui/icons-material/SaveAs';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -8,7 +8,7 @@ import {useSupa} from '../context/SupaContext'
 
 
 export const AdminClient = () => {
-  const {getClientes,clientes, updateCliente} = useSupa();
+  const {getClientes,clientes, updateCliente, adding, createCliente} = useSupa();
   // const [clientes, setClientes] = useState([]);
   const [registrando, setRegistrando] = useState(false)
   const [openSpinner, setOpenSpinner] = useState(false);
@@ -16,14 +16,19 @@ export const AdminClient = () => {
 
 
 
+
   useEffect(()=>{
-    getClientes();
-    console.log('iniciando admin',clientes);
+    cargarClientes();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
+  const cargarClientes = async() =>{
+    await getClientes();
+  }
+
+
   const onChangeCliente = async(e) => {
-    console.log(e);
+    console.log('cambios cliente',e);
     setOpenSpinner(true);
     try {
       const nuevoObj  = {golesA:Number(e.golesA),golesB:Number(e.golesB),finalizado:true}
@@ -37,28 +42,28 @@ export const AdminClient = () => {
     }
   }
 
+  
+
   const colClientes = [
     {field: 'Acciones', headerName: 'Acciones', sortable: false, maxWidth:70,
       renderCell: (params) => {
-        return <IconButton onClick={()=>onChangeCliente(params.row)} title='Actualizar Cliente' color={params.row.finalizado? 'success':'primary'}>
+        return <IconButton onClick={()=>onChangeCliente(params)} title='Actualizar Cliente' color={params.row.finalizado? 'success':'primary'}>
                 {params.row.finalizado? <CheckCircleIcon fontSize="large"/>:<SaveAsIcon fontSize="large"/>} 
               </IconButton>;
       },
     },
-    {field:'nombre',headerName:'Nombre', minWidth:90, align:'left',editable:true},
-    {field:'apodo',headerName:'Alias', minWidth:90, align:'left',editable:true},
-    {field:'fecha_nacimiento',headerName:'Fecha Nacimiento', minWidth:90, align:'left',editable:true,
+    {field:'nombre',headerName:'Nombre', minWidth:90, align:'left',type:'text',editable:true},
+    {field:'apodo',headerName:'Alias', minWidth:90, align:'left',type:'text',editable:true},
+    {field:'fecha_nacimiento',headerName:'Fecha Nacimiento', minWidth:90, align:'left',type:'date',editable:true,
     valueFormatter: (params) => {
       if (params.value == null) return ''
       const formateado = new Date(params.value).toLocaleDateString();
       return `${formateado}`;
     },},
-    {field:'ci',headerName:'Documento', minWidth:90,  align:'left',editable:true},
-    {field:'telefonos',headerName:'Teléfonos', minWidth:100,editable:true},
+    {field:'ci',headerName:'Documento', minWidth:90,  align:'left',type:'text',editable:true},
+    {field:'telefonos',headerName:'Teléfonos', minWidth:100,type:'tel',editable:true},
     {field:'id',headerName:'ID'},
   ]
-
-
 
   const handleClose = ()=>{
     setAlerta([false,'success','vacio']);
@@ -72,11 +77,90 @@ export const AdminClient = () => {
     setRegistrando(true)
   }
 
+  const registrarCliente = async (event) => {
+    openSpinner(true);
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const newCliente = {
+      nombre:data.get('nombre'),
+      apodo:data.get('apodo'),
+      ci:data.get('ci'),
+      fecha_nacimiento:data.get('fecha_nacimiento'),
+      telefonos:data.get('telefonos'),
+    }
+    await createCliente(newCliente);
+    openSpinner(false);
+  };
+
   return (
     <Container maxWidth='XL'>
       <Grid container spacing={1}>
         {registrando && <Grid item xs={12} md={6}>
-          aca el form
+          <Typography component="h1" variant="h5">
+            Nuevo Cliente
+          </Typography>
+          <Box component="form" onSubmit={registrarCliente} noValidate sx={{ mt: 1 }}>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="nombre"
+              label="Nombre"
+              name="nombre"
+              autoComplete="off"
+              autoFocus
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="apodo"
+              label="Apodo"
+              type="text"
+              id="apodo"
+              autoComplete="off"
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="ci"
+              label="Documento"
+              type="ci"
+              id="ci"
+              autoComplete="off"
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="fecha_nacimiento"
+              label="Fecha Nacimiento"
+              type="date"
+              id="fecha_nacimiento"
+              autoComplete="off"
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="telefonos"
+              label="Telefonos"
+              type="tel"
+              id="telefonos"
+              autoComplete="off"
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              className='gradient-primary'
+              sx={{ mt: 3, mb: 3 }}
+              disabled ={adding}
+            >
+              Registrar
+            </Button>
+          </Box>
         </Grid>}
         <Grid item xs={12} md={6} >
           <Button variant="outlined" startIcon={<PersonAddAltIcon/>} color="primary" onClick={handleNuevo} disabled={registrando} >Registrar Cliente</Button>
@@ -85,12 +169,22 @@ export const AdminClient = () => {
           <DataGrid
             rows={clientes}
             columns={colClientes}
-            pageSize={10}
-            rowsPerPageOptions={[10]}
+            initialState={{
+              pagination: {
+                pageSize: 10,
+              },
+            }}
             disableSelectionOnClick
             experimentalFeatures={{ newEditingApi: true }}
+            onCellEditStop={(params, event) => {
+              console.log(params,event)
+              if (params.reason === GridCellEditStopReasons.cellFocusOut) {
+                event.defaultMuiPrevented = true;//aca levantar un prompt para confirmar la edicion
+              }
+            }}
             columnVisibilityModel={{id:false}}
             rowHeight={80}
+            rowsPerPageOptions={[5, 10, 20]}
             // sortModel={[{field:'fechaPartido'}]}
             localeText={esES.components.MuiDataGrid.defaultProps.localeText}
           />

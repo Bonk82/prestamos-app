@@ -7,10 +7,10 @@ export const primeTheme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      main: '#ad5389',
+      main: '#e06bb2',
     },
     secondary: {
-      main: '#3c1053',
+      main: '#6d2694',
     },
     error: {
       main: red[300],
