@@ -4,7 +4,8 @@
   /* padding: 2rem; */
   text-align: center;
   min-width: 320px;
-  --primary:'#ad5389';
+  --primary:'#146C94';
+  --secondary:'#19A7CE'
 }
 
 .logo {
@@ -14,10 +15,10 @@
   transition: filter 300ms;
 }
 .logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+  filter: drop-shadow(0 0 2em var(--primary));
 }
 .logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+  filter: drop-shadow(0 0 2em var(--secondary));
 }
 
 @keyframes logo-spin {
@@ -49,24 +50,52 @@
 .MuiButton-root:hover {
   background: linear-gradient(to right, #77395e, #1d0829)!important;
 } */
-.gradient-primary {
+.gradient-prime {
   background: linear-gradient(to right, #ad5389, #3c1053)!important;
 }
-.gradient-primary:hover {
+.gradient-prime:hover {
   background: linear-gradient(to right, #77395e, #1d0829)!important;
+}
+
+.gradient-yard {
+  background: linear-gradient(to right, #19A7CE, #146C94)!important;
+  color: aliceblue !important;
+}
+.gradient-yard:hover {
+  background: linear-gradient(to right, #1383a1, #0e4c69)!important;
+  color: aliceblue;
 }
 
 .navbar{
   font-family:'monospace';
-  background-color:var(--primary);
+  /* background-color:var(--primary); */
 }
 
 .titulo{
-  background: -webkit-linear-gradient(45deg,#ad5389 30%, #3c1053);
+  background: -webkit-linear-gradient(45deg, #19A7CE 30%, #146C94 );
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   font-weight: 900;
   margin-bottom: 1rem;
   font-size: 2rem;
+}
+
+/*PARA EDITA MUI***/
+.MuiDataGrid-columnHeaders{
+  background-color: #0e4c69;
+  color: aliceblue;
+}
+
+.MuiDataGrid-footerContainer .MuiSvgIcon-root{
+  color: aliceblue;
+}
+
+.MuiDataGrid-footerContainer{
+  background-color: #0e4c69;
+  color: aliceblue;
+}
+
+.MuiDataGrid-footerContainer p{
+  color: aliceblue;
 }

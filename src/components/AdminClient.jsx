@@ -8,9 +8,8 @@ import {useSupa} from '../context/SupaContext'
 
 
 export const AdminClient = () => {
-  const {getClientes,clientes, updateCliente, adding, createCliente} = useSupa();
-  // const [clientes, setClientes] = useState([]);
-  const [registrando, setRegistrando] = useState(false)
+  const {getClientes, updateCliente, adding, createCliente} = useSupa();
+  const [clientes, setClientes] = useState([]);
   const [openSpinner, setOpenSpinner] = useState(false);
   const [alerta, setAlerta] = useState([false,'success','']);
 
@@ -23,7 +22,8 @@ export const AdminClient = () => {
   },[])
 
   const cargarClientes = async() =>{
-    await getClientes();
+    const resp = await getClientes();
+    setClientes(resp);
   }
 
 
@@ -31,8 +31,8 @@ export const AdminClient = () => {
     console.log('cambios cliente',e);
     setOpenSpinner(true);
     try {
-      const nuevoObj  = {golesA:Number(e.golesA),golesB:Number(e.golesB),finalizado:true}
-      await updateCliente(e.id,nuevoObj);
+      // const nuevoObj  = {golesA:Number(e.golesA),golesB:Number(e.golesB),finalizado:true}
+      await updateCliente(e.id,e);
     } catch (error) {
       setAlerta([true,'danger','Error al actualizar cliente'])
     } finally{
@@ -47,12 +47,12 @@ export const AdminClient = () => {
   const colClientes = [
     {field: 'Acciones', headerName: 'Acciones', sortable: false, maxWidth:70,
       renderCell: (params) => {
-        return <IconButton onClick={()=>onChangeCliente(params)} title='Actualizar Cliente' color={params.row.finalizado? 'success':'primary'}>
+        return <IconButton onClick={()=>onChangeCliente(params.row)} title='Actualizar Cliente' color={params.row.finalizado? 'success':'secondary'}>
                 {params.row.finalizado? <CheckCircleIcon fontSize="large"/>:<SaveAsIcon fontSize="large"/>} 
               </IconButton>;
       },
     },
-    {field:'nombre',headerName:'Nombre', minWidth:90, align:'left',type:'text',editable:true},
+    {field:'nombre',headerName:'Nombre', minWidth:90, align:'left',type:'text',editable:true, headerClassName: 'super-app-theme--header',},
     {field:'apodo',headerName:'Alias', minWidth:90, align:'left',type:'text',editable:true},
     {field:'fecha_nacimiento',headerName:'Fecha Nacimiento', minWidth:90, align:'left',type:'date',editable:true,
     valueFormatter: (params) => {
@@ -73,13 +73,10 @@ export const AdminClient = () => {
     return <Slide {...props} direction="up" />;
   }
 
-  const handleNuevo = () =>{
-    setRegistrando(true)
-  }
-
   const registrarCliente = async (event) => {
-    openSpinner(true);
     event.preventDefault();
+    console.log('el event',event);
+    setOpenSpinner(true);
     const data = new FormData(event.currentTarget);
     const newCliente = {
       nombre:data.get('nombre'),
@@ -88,20 +85,21 @@ export const AdminClient = () => {
       fecha_nacimiento:data.get('fecha_nacimiento'),
       telefonos:data.get('telefonos'),
     }
+    console.log('el new cliente',newCliente);
     await createCliente(newCliente);
-    openSpinner(false);
+    setAlerta([true,'success','Cliente registrado con éxito!'])
+    await cargarClientes();
+    setOpenSpinner(false);
   };
 
   return (
     <Container maxWidth='XL'>
       <Grid container spacing={1}>
-        {registrando && <Grid item xs={12} md={6}>
-          <Typography component="h1" variant="h5">
-            Nuevo Cliente
-          </Typography>
-          <Box component="form" onSubmit={registrarCliente} noValidate sx={{ mt: 1 }}>
+        <Grid item xs={12} md={6}>
+          <Typography variant="h5" color='inherit' sx={{fontWeight:500,bgcolor:'primary.main',borderRadius:1,pl:4,mb:1}}>Nuevo Cliente</Typography>
+          <Box component="form" onSubmit={registrarCliente}>
             <TextField
-              margin="normal"
+              margin="dense"
               required
               fullWidth
               id="nombre"
@@ -154,18 +152,19 @@ export const AdminClient = () => {
               type="submit"
               fullWidth
               variant="contained"
-              className='gradient-primary'
-              sx={{ mt: 3, mb: 3 }}
+              className='gradient-yard'
+              sx={{ mt: 1, mb: 3 }}
               disabled ={adding}
+              startIcon={<PersonAddAltIcon/>} 
             >
               Registrar
             </Button>
           </Box>
-        </Grid>}
+        </Grid>
         <Grid item xs={12} md={6} >
-          <Button variant="outlined" startIcon={<PersonAddAltIcon/>} color="primary" onClick={handleNuevo} disabled={registrando} >Registrar Cliente</Button>
-          <Box sx={{ height:{xs:350,md:700}, width:{xs:'100vw',md:'100%'},justifyContent:'center',mt:2,paddingX:0.5}}>
+          {/* <Button variant="contained" startIcon={<PersonAddAltIcon/>} className="gradient-yard" onClick={handleNuevo} disabled={registrando} >Registrar Cliente</Button> */}
           <Typography variant="h5" color='inherit' sx={{fontWeight:500,bgcolor:'primary.main',borderRadius:1,pl:4,mb:1}}>Lista de Clientes</Typography>
+          <Box sx={{ height:{xs:330,md:440}, width:{xs:'100%',md:'100%'},justifyContent:'center',mt:2}}>
           <DataGrid
             rows={clientes}
             columns={colClientes}
@@ -185,6 +184,7 @@ export const AdminClient = () => {
             columnVisibilityModel={{id:false}}
             rowHeight={80}
             rowsPerPageOptions={[5, 10, 20]}
+            pageSize={5}
             // sortModel={[{field:'fechaPartido'}]}
             localeText={esES.components.MuiDataGrid.defaultProps.localeText}
           />
