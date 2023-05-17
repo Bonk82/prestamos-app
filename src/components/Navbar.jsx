@@ -57,7 +57,7 @@ export const Navbar = () => {
   return (
     user &&
     <AppBar position="sticky">
-      <Container maxWidth="xl" sx={{fontFamily:'monospace',bgcolor:'primary.main'}}>
+      <Container maxWidth="xl" sx={{fontFamily:'monospace',bgcolor:'primary.main',width:{xs:'100vw',md:'100%'}}}>
         <Toolbar disableGutters>
           <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
           <Typography

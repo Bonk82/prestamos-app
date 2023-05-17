@@ -124,6 +124,7 @@ export const SupabaseContextProvider = ({ children }) => {
   const updateCliente = async (id, updatedFields) => {
     try {
       // const user = supabase.auth.user();
+      console.log('actualizando',id,updatedFields);
       const { error, data } = await supabase
         .from("cliente")
         .update(updatedFields)
@@ -131,7 +132,7 @@ export const SupabaseContextProvider = ({ children }) => {
       if (error) {
         throw error;
       }
-      setClientes(clientes.filter((clientes) => clientes.id !== data[0].id));
+      console.log(error,data);
     } catch (error) {
       alert(error.error_description || error.message || error);
     }
