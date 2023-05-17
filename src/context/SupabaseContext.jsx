@@ -1,9 +1,18 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 // import { useState } from "react";
 import { supabase } from "../supabase/client";
 // import {SupaContext} from './contexto'
 
 export const SupaContext = createContext();
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const useSupa = () => {
+  const context = useContext(SupaContext);
+  if (context === undefined) {
+    throw new Error("useTasks must be used within a TaskProvider");
+  }
+  return context;
+};
 
 // eslint-disable-next-line react/prop-types
 export const SupabaseContextProvider = ({ children }) => {
@@ -11,6 +20,7 @@ export const SupabaseContextProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [adding, setAdding] = useState(false);
   const [avatar, setAvatar] = useState('');
+  const [usuario, setUsuario] = useState(null)
 
   useEffect(()=>{
     getUser();
@@ -69,7 +79,7 @@ export const SupabaseContextProvider = ({ children }) => {
         e.identity_data.picture ? setAvatar(e.identity_data.picture):'C'
         console.log('entroEach',avatar);
       });
-      
+      if (usuario.data.user) setUsuario(usuario.data.user)
     } catch (error) {
       console.log('erro al cargar usuario',error);
     }
@@ -174,6 +184,7 @@ export const SupabaseContextProvider = ({ children }) => {
         logout,
         getUser,
         avatar,
+        usuario
       }}
     >
       {children}

@@ -1,20 +1,17 @@
 import { Alert, Backdrop, Box, Button, CircularProgress, Container, Grid, IconButton, Slide, Snackbar, TextField, Typography } from "@mui/material"
-import { DataGrid,GridCellEditStopReasons,esES } from '@mui/x-data-grid';
+import { DataGrid,esES } from '@mui/x-data-grid';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import SaveAsIcon from '@mui/icons-material/SaveAs';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { useEffect, useState } from "react";
-import {useSupa} from '../context/SupaContext'
+import {useSupa} from '../context/SupabaseContext'
 
 
 export const AdminClient = () => {
   const {getClientes, updateCliente, adding, createCliente} = useSupa();
-  const [clientes, setClientes] = useState([]);
+  const [probando, setProbando] = useState([]);
   const [openSpinner, setOpenSpinner] = useState(false);
   const [alerta, setAlerta] = useState([false,'success','']);
-
-
-
 
   useEffect(()=>{
     cargarClientes();
@@ -23,7 +20,7 @@ export const AdminClient = () => {
 
   const cargarClientes = async() =>{
     const resp = await getClientes();
-    setClientes(resp);
+    setProbando(resp);
   }
 
 
@@ -166,7 +163,7 @@ export const AdminClient = () => {
           <Typography variant="h5" color='inherit' sx={{fontWeight:500,bgcolor:'primary.main',borderRadius:1,pl:4,mb:1}}>Lista de Clientes</Typography>
           <Box sx={{ height:{xs:330,md:440}, width:{xs:'100%',md:'100%'},justifyContent:'center',mt:2}}>
           <DataGrid
-            rows={clientes}
+            rows={probando}
             columns={colClientes}
             initialState={{
               pagination: {
@@ -175,12 +172,12 @@ export const AdminClient = () => {
             }}
             disableSelectionOnClick
             experimentalFeatures={{ newEditingApi: true }}
-            onCellEditStop={(params, event) => {
-              console.log(params,event)
-              if (params.reason === GridCellEditStopReasons.cellFocusOut) {
-                event.defaultMuiPrevented = true;//aca levantar un prompt para confirmar la edicion
-              }
-            }}
+            // onCellEditStop={(params, event) => {
+            //   console.log(params,event)
+            //   if (params.reason === GridCellEditStopReasons.cellFocusOut) {
+            //     event.defaultMuiPrevented = true;//aca levantar un prompt para confirmar la edicion
+            //   }
+            // }}
             columnVisibilityModel={{id:false}}
             rowHeight={80}
             rowsPerPageOptions={[5, 10, 20]}

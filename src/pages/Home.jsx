@@ -1,14 +1,8 @@
 import { Button } from "@mui/material"
-import { useSupa } from "../context/SupaContext";
-import { useEffect } from "react";
+import { useSupa } from "../context/SupabaseContext";
 
 export const Home = () => {
   const { adding, createCliente, clientes, getClientes } = useSupa();
-
-  useEffect(()=>{
-    getClientes()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[])
 
   const insertarCliente = async () =>{
     console.log(adding);

@@ -9,23 +9,21 @@ import Login from "./pages/Login";
 import { NotFound } from "./pages/NotFound";
 import Prestamo from "./pages/Prestamo";
 import Dashboard from "./pages/Dashboard";
-import {SupabaseContextProvider} from './context/SupabaseContextProvider'
+import {SupabaseContextProvider} from './context/SupabaseContext.jsx'
 import { AppTheme } from "./themes/AppTheme";
+import { AuthProvider } from "./context/AuthContext.jsx";
 
 function App() {
   const navigate = useNavigate();
 
   useEffect(() => {
     supabase.auth.onAuthStateChange((_event, session) => {
-      if (!session) {
-        navigate("/login");
-      }else {
-        navigate("/");
-      }
+      if (!session) navigate("/login");
     });
   }, [navigate]);
 
   return (
+    <AuthProvider>
     <SupabaseContextProvider>
       <AppTheme>
         <Navbar />
@@ -38,6 +36,7 @@ function App() {
         </Routes>
       </AppTheme>
     </SupabaseContextProvider>
+    </AuthProvider>
   )
 }
 

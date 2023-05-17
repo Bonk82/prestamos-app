@@ -13,16 +13,20 @@ import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSupa } from '../context/SupaContext';
+import { useSupa } from '../context/SupabaseContext';
+// import { useAuth } from '../context/AuthContext';
 
 const pages = ['INICIO', 'DASHBOARD', 'PRESTAMOS'];
 const settings = ['PERFIL', 'BALANCE', 'SALIR'];
 
 export const Navbar = () => {
+  // const {logout} = useSupa();
+  // const {user}  = useAuth();
+
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const navigate = useNavigate();
-  const {avatar,user} = useSupa();
+  const {avatar,usuario} = useSupa();
   // let location = useLocation();
 
 
@@ -50,12 +54,13 @@ export const Navbar = () => {
     if(e.target.textContent === 'PRESTAMOS') navigate('/prestamo');
   };
 
-  const handleCloseUserMenu = () => {
+  const handleCloseUserMenu = (e) => {
     setAnchorElUser(null);
+    console.log(e);
   };
 
   return (
-    user &&
+    usuario &&
     <AppBar position="sticky">
       <Container maxWidth="xl" sx={{fontFamily:'monospace',bgcolor:'primary.main',width:{xs:'100vw',md:'100%'}}}>
         <Toolbar disableGutters>

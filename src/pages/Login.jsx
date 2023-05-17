@@ -12,7 +12,7 @@ import Container from '@mui/material/Container';
 import { useEffect } from 'react';
 import { supabase } from '../supabase/client';
 import { useNavigate } from "react-router-dom";
-import { useSupa } from "../context/SupaContext";
+import { useSupa } from "../context/SupabaseContext";
 import GoogleIcon from '@mui/icons-material/Google';
 // import supabase from '../supabase/client'
 
@@ -42,7 +42,7 @@ const Login = () => {
 
   useEffect(() => {
     if (supabase.auth.getUser()) {
-      console.log(supabase.auth.getUser());
+      // console.log(supabase.auth.getUser());
       navigate("/");
     }
     console.log("called");
