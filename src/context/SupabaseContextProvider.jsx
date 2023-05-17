@@ -65,10 +65,11 @@ export const SupabaseContextProvider = ({ children }) => {
     try {
       const usuario = await supabase.auth.getUser();
       console.log('ingresando',usuario);
-      usuario.data.user.identities.forEach(e => {
+      usuario.data.user?.identities.forEach(e => {
         e.identity_data.picture ? setAvatar(e.identity_data.picture):'C'
         console.log('entroEach',avatar);
       });
+      
     } catch (error) {
       console.log('erro al cargar usuario',error);
     }

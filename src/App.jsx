@@ -19,6 +19,8 @@ function App() {
     supabase.auth.onAuthStateChange((_event, session) => {
       if (!session) {
         navigate("/login");
+      }else {
+        navigate("/");
       }
     });
   }, [navigate]);
