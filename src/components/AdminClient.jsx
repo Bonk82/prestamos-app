@@ -30,14 +30,18 @@ export const AdminClient = () => {
     try {
       // const nuevoObj  = {golesA:Number(e.golesA),golesB:Number(e.golesB),finalizado:true}
       await updateCliente(e.id,e);
+      setAlerta([true,'success','Cliente actualizado con éxito!'])
+      return e
     } catch (error) {
       setAlerta([true,'danger','Error al actualizar cliente'])
     } finally{
-      // await getClientes();
-      setAlerta([true,'success','Cliente actualizado con éxito!'])
       setOpenSpinner(false);
     }
   }
+
+  // const handleProcessRowUpdateError = ()=>{
+  //   setAlerta([true,'danger','Error al actualizar cliente'])
+  // }
 
   
 
@@ -161,23 +165,19 @@ export const AdminClient = () => {
         <Grid item xs={12} md={6} >
           {/* <Button variant="contained" startIcon={<PersonAddAltIcon/>} className="gradient-yard" onClick={handleNuevo} disabled={registrando} >Registrar Cliente</Button> */}
           <Typography variant="h5" color='inherit' sx={{fontWeight:500,bgcolor:'primary.main',borderRadius:1,pl:4,mb:1}}>Lista de Clientes</Typography>
-          <Box sx={{ height:{xs:330,md:440}, width:{xs:'100%',md:'100%'},justifyContent:'center',mt:2}}>
+          <Box sx={{ height:{xs:330,md:425}, width:{xs:'100%',md:'100%'},justifyContent:'center',mt:2}}>
           <DataGrid
             rows={probando}
             columns={colClientes}
             initialState={{
-              pagination: {
-                pageSize: 10,
+              paginationModel: {
+                pageSize: 5,
               },
             }}
             disableSelectionOnClick
+            processRowUpdate={onchange}
+            // onProcessRowUpdateError={handleProcessRowUpdateError}
             experimentalFeatures={{ newEditingApi: true }}
-            // onCellEditStop={(params, event) => {
-            //   console.log(params,event)
-            //   if (params.reason === GridCellEditStopReasons.cellFocusOut) {
-            //     event.defaultMuiPrevented = true;//aca levantar un prompt para confirmar la edicion
-            //   }
-            // }}
             columnVisibilityModel={{id:false}}
             rowHeight={80}
             rowsPerPageOptions={[5, 10, 20]}
