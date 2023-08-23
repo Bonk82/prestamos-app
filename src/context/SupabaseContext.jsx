@@ -73,19 +73,20 @@ export const SupabaseContextProvider = ({ children }) => {
 
   const getUser = async () =>{
     try {
-      const usuario = await supabase.auth.getUser();
-      console.log('ingresando',usuario);
-      usuario.data.user?.identities.forEach(e => {
+      const pivotUser = await supabase.auth.getUser();
+      console.log('ingresando',pivotUser);
+      pivotUser.data.user?.identities.forEach(e => {
         e.identity_data.picture ? setAvatar(e.identity_data.picture):'C'
         console.log('entroEach',avatar);
       });
-      if (usuario.data.user) setUsuario(usuario.data.user)
+      // pivotUser.data.user.email === 'bonkalvarado@gmail.com' ? pivotUser.data.user.rol =  'ADMIN': 'USUARIO';
+      if (pivotUser.data.user) setUsuario(pivotUser.data.user)
     } catch (error) {
       console.log('erro al cargar usuario',error);
     }
   }
 
-  const createCliente = async ({nombre,apodo,fecha_nacimiento,ci,telefonos}) => {
+  const createCliente = async ({nombre,apodo,fecha_nacimiento,ci,telefonos,direccion}) => {
     setAdding(true);
     try {
       // const usuario = await supabase.auth.getUser()
@@ -96,6 +97,7 @@ export const SupabaseContextProvider = ({ children }) => {
         fecha_nacimiento,
         ci,
         telefonos,
+        direccion,
       });
       console.log('llega aca',error,data,clientes);
       if (error) {

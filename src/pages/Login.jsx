@@ -10,7 +10,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { useEffect } from 'react';
-import { supabase } from '../supabase/client';
+// import { supabase } from '../supabase/client';
 import { useNavigate } from "react-router-dom";
 import { useSupa } from "../context/SupabaseContext";
 import GoogleIcon from '@mui/icons-material/Google';
@@ -30,7 +30,7 @@ function Copyright(props) {
   );
 }
 const Login = () => {
-  const { loading, signInWithGoogle, signInWithEmail } = useSupa();
+  const { loading, signInWithGoogle, signInWithEmail,usuario } = useSupa();
   const navigate = useNavigate();
 
 
@@ -41,12 +41,12 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if (supabase.auth.getUser()) {
-      // console.log(supabase.auth.getUser());
+    if (!usuario) { //supabase.auth.getUser()
       navigate("/");
     }
     console.log("called");
-  }, [navigate]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Container component="main" maxWidth="xs">
