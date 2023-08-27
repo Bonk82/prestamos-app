@@ -53,7 +53,7 @@ export const AdminClient = () => {
               </IconButton>;
       },
     },
-    {field:'nombre',headerName:'Nombre', minWidth:90, align:'left',type:'text',editable:true, headerClassName: 'super-app-theme--header',},
+    {field:'nombre',headerName:'Nombre', minWidth:250, align:'left',type:'text',editable:true, headerClassName: 'super-app-theme--header',},
     {field:'apodo',headerName:'Alias', minWidth:90, align:'left',type:'text',editable:true},
     {field:'fecha_nacimiento',headerName:'Fecha Nacimiento', minWidth:90, align:'left',type:'date',editable:true,
     valueFormatter: (params) => {
@@ -63,6 +63,7 @@ export const AdminClient = () => {
     },},
     {field:'ci',headerName:'Documento', minWidth:90,  align:'left',type:'text',editable:true},
     {field:'telefonos',headerName:'Teléfonos', minWidth:100,type:'tel',editable:true},
+    {field:'direccion',headerName:'Dirección', minWidth:100,type:'text',editable:true},
     {field:'id',headerName:'ID'},
   ]
 
@@ -85,6 +86,7 @@ export const AdminClient = () => {
       ci:data.get('ci'),
       fecha_nacimiento:data.get('fecha_nacimiento'),
       telefonos:data.get('telefonos'),
+      direccion:data.get('clientes'),
     }
     console.log('el new cliente',newCliente);
     await createCliente(newCliente);
@@ -137,7 +139,11 @@ export const AdminClient = () => {
               label="Fecha Nacimiento"
               type="date"
               id="fecha_nacimiento"
+              placeholder="dd-mm-yyyy"
               autoComplete="off"
+              InputLabelProps={{
+                style: { top: '-0.8rem' },
+              }}
             />
             <TextField
               margin="normal"
@@ -147,6 +153,16 @@ export const AdminClient = () => {
               label="Telefonos"
               type="tel"
               id="telefonos"
+              autoComplete="off"
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="direccion"
+              label="Direccion"
+              type="text"
+              id="direccion"
               autoComplete="off"
             />
             <Button
@@ -165,23 +181,22 @@ export const AdminClient = () => {
         <Grid item xs={12} md={6} >
           {/* <Button variant="contained" startIcon={<PersonAddAltIcon/>} className="gradient-yard" onClick={handleNuevo} disabled={registrando} >Registrar Cliente</Button> */}
           <Typography variant="h5" color='inherit' sx={{fontWeight:500,bgcolor:'primary.main',borderRadius:1,pl:4,mb:1}}>Lista de Clientes</Typography>
-          <Box sx={{ height:{xs:330,md:425}, width:{xs:'100%',md:'100%'},justifyContent:'center',mt:2}}>
+          <Box sx={{ height:{xs:330,md:505}, width:{xs:'100%',md:'100%'},justifyContent:'center',mt:2}}>
           <DataGrid
+
             rows={probando}
             columns={colClientes}
             initialState={{
-              paginationModel: {
-                pageSize: 5,
-              },
+              pagination: { paginationModel: { pageSize: 10 } },
             }}
-            disableSelectionOnClick
+            // disableSelectionOnClick
             processRowUpdate={onchange}
             // onProcessRowUpdateError={handleProcessRowUpdateError}
             experimentalFeatures={{ newEditingApi: true }}
             columnVisibilityModel={{id:false}}
-            rowHeight={80}
-            rowsPerPageOptions={[5, 10, 20]}
-            pageSize={5}
+            rowHeight={48}
+            pageSizeOptions={[10, 20, 50]}
+            pageSize={10}
             // sortModel={[{field:'fechaPartido'}]}
             localeText={esES.components.MuiDataGrid.defaultProps.localeText}
           />

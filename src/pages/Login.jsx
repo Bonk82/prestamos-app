@@ -41,10 +41,10 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if (!usuario) { //supabase.auth.getUser()
+    console.log('en login',usuario);
+    if (usuario) { //supabase.auth.getUser()
       navigate("/");
     }
-    console.log("called");
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

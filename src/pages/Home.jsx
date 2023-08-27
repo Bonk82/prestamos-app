@@ -15,6 +15,7 @@ export const Home = () => {
 
   return (
     <div>
+      <label className="titulo">Inicio</label><br />
       Se cargara dashboard o prestamos segun el rol del user
       <Button
       variant="outlined"

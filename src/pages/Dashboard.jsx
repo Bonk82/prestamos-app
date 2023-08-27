@@ -6,7 +6,7 @@ import { useSupa } from "../context/SupabaseContext";
 
 const Dashboard = () => {
   const {usuario} = useSupa();
-
+  console.log('mi usuario',usuario);
 
   return (
     <div>
@@ -15,7 +15,7 @@ const Dashboard = () => {
       {/* <Button variant="outlined" startIcon={<PersonAddAltIcon/>} color="primary">Registrar Prestamo</Button>
       <Button variant="contained" startIcon={<PersonAddAltIcon/>} className="gradient-primary">Registrar Prestamo</Button> */}
 
-      {usuario?.role === 'supabase_admin' && <AdminClient/>}
+      {usuario?.app_metadata.rol === 'admin' && <AdminClient/>}
     </div>
     
   )

@@ -28,14 +28,15 @@ const columns = [
   {
     field: 'dateCreated',
     headerName: 'Date Created',
-    type: 'date',
+    type: 'number',
     width: 180,
     editable: true,
+    cellClassName: 'font-tabular-nums'
   },
   {
     field: 'lastLogin',
     headerName: 'Last Login',
-    type: 'dateTime',
+    type: 'date',
     width: 220,
     editable: true,
   },
@@ -46,36 +47,36 @@ const rows = [
     id: 1,
     name: 'aaaaa',
     age: 25,
-    dateCreated: new Date('20230511'),
-    lastLogin: new Date('20220101'),
+    dateCreated: 4578154,
+    lastLogin: new Date('2022-01-01'),
   },
   {
     id: 2,
     name: 'bbbbbbbbbbbbb',
     age: 36,
-    dateCreated: new Date('20230511'),
-    lastLogin: new Date('20220101'),
+    dateCreated: 23234442,
+    lastLogin: new Date('2022-01-01'),
   },
   {
     id: 3,
     name: 'ccccccccccccccccc',
     age: 19,
-    dateCreated: new Date('20230511'),
-    lastLogin: new Date('20220101'),
+    dateCreated: 4454532,
+    lastLogin: new Date('2022-01-01'),
   },
   {
     id: 4,
     name: 'ddddddddddddddd',
     age: 28,
-    dateCreated: new Date('20230511'),
-    lastLogin: new Date('20220101'),
+    dateCreated: 43434333,
+    lastLogin: new Date('2022-01-01'),
   },
   {
     id: 5,
     name: 'eeeeeeeeeeeeeeeeee',
     age: 23,
-    dateCreated: new Date('20230511'),
-    lastLogin: new Date('20220101'),
+    dateCreated: 3243455,
+    lastLogin: new Date('2022-01-01'),
   },
 ];
 
@@ -111,6 +112,7 @@ const Prestamo = () => {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
+      <label className="titulo">Prestamos</label><br />
       <DataGrid
         rows={rows}
         columns={columns}
