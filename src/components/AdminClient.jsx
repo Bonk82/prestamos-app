@@ -8,7 +8,7 @@ import {useSupa} from '../context/SupabaseContext'
 
 
 export const AdminClient = () => {
-  const {getClientes, updateCliente, adding, createCliente} = useSupa();
+  const {updateCliente, adding,create,getRegs} = useSupa();
   const [probando, setProbando] = useState([]);
   const [openSpinner, setOpenSpinner] = useState(false);
   const [alerta, setAlerta] = useState([false,'success','']);
@@ -19,7 +19,7 @@ export const AdminClient = () => {
   },[])
 
   const cargarClientes = async() =>{
-    const resp = await getClientes();
+    const resp = await getRegs('cliente','id',false);//getClientes();
     setProbando(resp);
   }
 
@@ -89,7 +89,8 @@ export const AdminClient = () => {
       direccion:data.get('clientes'),
     }
     console.log('el new cliente',newCliente);
-    await createCliente(newCliente);
+    // await createCliente(newCliente);
+    await create(newCliente,'cliente');
     setAlerta([true,'success','Cliente registrado con éxito!'])
     await cargarClientes();
     setOpenSpinner(false);

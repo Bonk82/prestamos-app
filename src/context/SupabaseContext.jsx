@@ -170,6 +170,40 @@ export const SupabaseContextProvider = ({ children }) => {
     }
   };
 
+  const create = async (reg,table) => {
+    setAdding(true);
+    try {
+      const { error, data } = await supabase.from(table).insert(reg);
+      console.log('llega aca',error,data,reg,table);
+      if (error) {
+        throw error;
+      }
+    } catch (error) {
+      alert(error.error_description || error.message || error);
+    } finally {
+      setAdding(false);
+    }
+  };
+
+  const getRegs = async (table,col,ascending) => {
+    setLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from(table)
+        .select("*")
+        .order(col, { ascending});
+
+      if (error) throw error;
+      if(table === 'cliente') setClientes(data);
+      console.log(table,data);
+      return data;
+    } catch (error) {
+      alert(error.error_description || error.message || error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <SupaContext.Provider
       value={{
@@ -186,7 +220,9 @@ export const SupabaseContextProvider = ({ children }) => {
         logout,
         getUser,
         avatar,
-        usuario
+        usuario,
+        create,
+        getRegs,
       }}
     >
       {children}

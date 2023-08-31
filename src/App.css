@@ -50,6 +50,9 @@
 .MuiButton-root:hover {
   background: linear-gradient(to right, #77395e, #1d0829)!important;
 } */
+body{
+  background: linear-gradient(to top, #040408 0 40%, #033b89 170%);
+}
 .gradient-prime {
   background: linear-gradient(to right, #ad5389, #3c1053)!important;
 }
