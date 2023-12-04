@@ -34,9 +34,9 @@ export const SupabaseContextProvider = ({ children }) => {
       if (error) {
         throw error;
       }
-      alert("revisa tu correo para usar el enlace mágico");
+      console.log("revisa tu correo para usar el enlace mágico");
     } catch (error) {
-      alert(error.message);
+      console.log(error.message);
     } finally {
       setLoading(false);
     }
@@ -65,7 +65,7 @@ export const SupabaseContextProvider = ({ children }) => {
         throw error;
       }
     } catch (error) {
-      alert(error.error_description || error.message);
+      console.log(error.error_description || error.message);
     } finally {
       setLoading(false);
     }
@@ -104,7 +104,7 @@ export const SupabaseContextProvider = ({ children }) => {
         throw error;
       }
     } catch (error) {
-      alert(error.error_description || error.message || error);
+      console.log(error.error_description || error.message || error);
     } finally {
       setAdding(false);
     }
@@ -127,7 +127,7 @@ export const SupabaseContextProvider = ({ children }) => {
       console.log('los clientes',data);
       return data;
     } catch (error) {
-      alert(error.error_description || error.message || error);
+      console.log(error.error_description || error.message || error);
     } finally {
       setLoading(false);
     }
@@ -146,7 +146,7 @@ export const SupabaseContextProvider = ({ children }) => {
       }
       console.log(error,data);
     } catch (error) {
-      alert(error.error_description || error.message || error);
+      console.log(error.error_description || error.message || error);
     }
   };
 
@@ -166,11 +166,11 @@ export const SupabaseContextProvider = ({ children }) => {
 
       setClientes(clientes.filter((task) => task.id !== data[0].id));
     } catch (error) {
-      alert(error.error_description || error.message);
+      console.log(error.error_description || error.message);
     }
   };
 
-  const create = async (reg,table) => {
+  const createReg = async (reg,table) => {
     setAdding(true);
     try {
       const { error, data } = await supabase.from(table).insert(reg);
@@ -179,13 +179,13 @@ export const SupabaseContextProvider = ({ children }) => {
         throw error;
       }
     } catch (error) {
-      alert(error.error_description || error.message || error);
+      console.log(error.error_description || error.message || error);
     } finally {
       setAdding(false);
     }
   };
 
-  const getRegs = async (table,col,ascending) => {
+  const getReg = async (table,col,ascending) => {
     setLoading(true);
     try {
       const { data, error } = await supabase
@@ -198,9 +198,39 @@ export const SupabaseContextProvider = ({ children }) => {
       console.log(table,data);
       return data;
     } catch (error) {
-      alert(error.error_description || error.message || error);
+      console.log(error.error_description || error.message || error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const updateReg = async (tabla, updatedFields) => {
+    try {
+      // const user = supabase.auth.user();
+      console.log('actualizando',updatedFields);
+      const { error, data } = await supabase
+        .from(tabla)
+        .update(updatedFields)
+        .eq("id", updatedFields.id)
+      if (error) throw error;
+      console.log(error,data);
+    } catch (error) {
+      console.log(error.error_description || error.message || error);
+    }
+  };
+
+  const deleteReg = async (id,tabla) => {
+    try {
+      const user = supabase.auth.user();
+      const { error, data } = await supabase
+        .from(tabla)
+        .delete()
+        .eq("userId", user.id)
+        .eq("id", id);
+      if (error) throw error;
+      setClientes(clientes.filter((task) => task.id !== data[0].id));
+    } catch (error) {
+      console.log(error.error_description || error.message);
     }
   };
 
@@ -221,8 +251,10 @@ export const SupabaseContextProvider = ({ children }) => {
         getUser,
         avatar,
         usuario,
-        create,
-        getRegs,
+        createReg,
+        getReg,
+        updateReg,
+        deleteReg,
       }}
     >
       {children}

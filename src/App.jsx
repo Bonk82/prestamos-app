@@ -24,18 +24,18 @@ function App() {
 
   return (
     <AuthProvider>
-    <SupabaseContextProvider>
-      <AppTheme>
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/prestamo" element={<Prestamo />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </AppTheme>
-    </SupabaseContextProvider>
+      <SupabaseContextProvider>
+        <AppTheme>
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/prestamo" element={<Prestamo />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </AppTheme>
+      </SupabaseContextProvider>
     </AuthProvider>
   )
 }

@@ -8,7 +8,7 @@ import {useSupa} from '../context/SupabaseContext'
 
 
 export const AdminClient = () => {
-  const {updateCliente, adding,create,getRegs} = useSupa();
+  const {adding,createReg,getReg,updateReg/*,deleteReg*/} = useSupa();
   const [probando, setProbando] = useState([]);
   const [openSpinner, setOpenSpinner] = useState(false);
   const [alerta, setAlerta] = useState([false,'success','']);
@@ -19,17 +19,37 @@ export const AdminClient = () => {
   },[])
 
   const cargarClientes = async() =>{
-    const resp = await getRegs('cliente','id',false);//getClientes();
+    const resp = await getReg('cliente','id',false);//getClientes();
     setProbando(resp);
   }
 
+  const registrarCliente = async (event) => {
+    event.preventDefault();
+    console.log('el event',event);
+    setOpenSpinner(true);
+    const data = new FormData(event.currentTarget);
+    const newCliente = {
+      nombre:data.get('nombre'),
+      apodo:data.get('apodo'),
+      ci:data.get('ci'),
+      fecha_nacimiento:data.get('fecha_nacimiento'),
+      telefonos:data.get('telefonos'),
+      direccion:data.get('direccion'),
+    }
+    console.log('new client',newCliente);
+    // await createCliente(newCliente);
+    await createReg(newCliente,'cliente');
+    setAlerta([true,'success','Cliente registrado con éxito!'])
+    await cargarClientes();
+    setOpenSpinner(false); 
+  }
 
   const onChangeCliente = async(e) => {
     console.log('cambios cliente',e);
     setOpenSpinner(true);
     try {
       // const nuevoObj  = {golesA:Number(e.golesA),golesB:Number(e.golesB),finalizado:true}
-      await updateCliente(e.id,e);
+      await updateReg('cliente',e);
       setAlerta([true,'success','Cliente actualizado con éxito!'])
       return e
     } catch (error) {
@@ -39,11 +59,20 @@ export const AdminClient = () => {
     }
   }
 
-  // const handleProcessRowUpdateError = ()=>{
-  //   setAlerta([true,'danger','Error al actualizar cliente'])
+  // const onDeleteCliente = async(e) => {
+  //   console.log('delete cliente',e);
+  //   setOpenSpinner(true);
+  //   try {
+  //     // const nuevoObj  = {golesA:Number(e.golesA),golesB:Number(e.golesB),finalizado:true}
+  //     await deleteReg('cliente',e.id);
+  //     setAlerta([true,'success','Cliente eliminado satisfactoriamente!'])
+  //     return e
+  //   } catch (error) {
+  //     setAlerta([true,'danger','Error al eliminar cliente'])
+  //   } finally{
+  //     setOpenSpinner(false);
+  //   }
   // }
-
-  
 
   const colClientes = [
     {field: 'Acciones', headerName: 'Acciones', sortable: false, maxWidth:70,
@@ -74,27 +103,6 @@ export const AdminClient = () => {
   const slideAlert = (props) => {
     return <Slide {...props} direction="up" />;
   }
-
-  const registrarCliente = async (event) => {
-    event.preventDefault();
-    console.log('el event',event);
-    setOpenSpinner(true);
-    const data = new FormData(event.currentTarget);
-    const newCliente = {
-      nombre:data.get('nombre'),
-      apodo:data.get('apodo'),
-      ci:data.get('ci'),
-      fecha_nacimiento:data.get('fecha_nacimiento'),
-      telefonos:data.get('telefonos'),
-      direccion:data.get('clientes'),
-    }
-    console.log('el new cliente',newCliente);
-    // await createCliente(newCliente);
-    await create(newCliente,'cliente');
-    setAlerta([true,'success','Cliente registrado con éxito!'])
-    await cargarClientes();
-    setOpenSpinner(false);
-  };
 
   return (
     <Container maxWidth='XL'>
