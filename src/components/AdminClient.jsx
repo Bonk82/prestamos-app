@@ -3,14 +3,13 @@ import { DataGrid,esES } from '@mui/x-data-grid';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import SaveAsIcon from '@mui/icons-material/SaveAs';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { useEffect, useState } from "react";
 import {useSupa} from '../context/SupabaseContext'
 
 
 export const AdminClient = () => {
-  const {adding,createReg,getReg,updateReg/*,deleteReg*/} = useSupa();
-  const [probando, setProbando] = useState([]);
-  const [openSpinner, setOpenSpinner] = useState(false);
+  const {loading,createReg,getReg,updateReg,deleteReg,clientes} = useSupa();
   const [alerta, setAlerta] = useState([false,'success','']);
 
   useEffect(()=>{
@@ -19,14 +18,12 @@ export const AdminClient = () => {
   },[])
 
   const cargarClientes = async() =>{
-    const resp = await getReg('cliente','id',false);//getClientes();
-    setProbando(resp);
+    await getReg('cliente','id',false);//getClientes();
   }
 
   const registrarCliente = async (event) => {
     event.preventDefault();
     console.log('el event',event);
-    setOpenSpinner(true);
     const data = new FormData(event.currentTarget);
     const newCliente = {
       nombre:data.get('nombre'),
@@ -37,49 +34,47 @@ export const AdminClient = () => {
       direccion:data.get('direccion'),
     }
     console.log('new client',newCliente);
-    // await createCliente(newCliente);
     await createReg(newCliente,'cliente');
     setAlerta([true,'success','Cliente registrado con éxito!'])
     await cargarClientes();
-    setOpenSpinner(false); 
   }
 
   const onChangeCliente = async(e) => {
     console.log('cambios cliente',e);
-    setOpenSpinner(true);
     try {
-      // const nuevoObj  = {golesA:Number(e.golesA),golesB:Number(e.golesB),finalizado:true}
       await updateReg('cliente',e);
       setAlerta([true,'success','Cliente actualizado con éxito!'])
       return e
     } catch (error) {
       setAlerta([true,'danger','Error al actualizar cliente'])
-    } finally{
-      setOpenSpinner(false);
     }
   }
 
-  // const onDeleteCliente = async(e) => {
-  //   console.log('delete cliente',e);
-  //   setOpenSpinner(true);
-  //   try {
-  //     // const nuevoObj  = {golesA:Number(e.golesA),golesB:Number(e.golesB),finalizado:true}
-  //     await deleteReg('cliente',e.id);
-  //     setAlerta([true,'success','Cliente eliminado satisfactoriamente!'])
-  //     return e
-  //   } catch (error) {
-  //     setAlerta([true,'danger','Error al eliminar cliente'])
-  //   } finally{
-  //     setOpenSpinner(false);
-  //   }
-  // }
+  const onDeleteCliente = async(e) => {
+    console.log('delete cliente',e);
+    const r = confirm('Realmente desea eliminar el registro?');
+    if(!r) return false;
+    try {
+      // const nuevoObj  = {golesA:Number(e.golesA),golesB:Number(e.golesB),finalizado:true}
+      await deleteReg('cliente',e.id);
+      setAlerta([true,'success','Cliente eliminado satisfactoriamente!'])
+      return e
+    } catch (error) {
+      setAlerta([true,'danger','Error al eliminar cliente'])
+    }
+  }
 
   const colClientes = [
-    {field: 'Acciones', headerName: 'Acciones', sortable: false, maxWidth:70,
+    {field: 'Acciones', headerName: 'Acciones', sortable: false, maxWidth:150,
       renderCell: (params) => {
-        return <IconButton onClick={()=>onChangeCliente(params.row)} title='Actualizar Cliente' color={params.row.finalizado? 'success':'secondary'}>
-                {params.row.finalizado? <CheckCircleIcon fontSize="large"/>:<SaveAsIcon fontSize="large"/>} 
-              </IconButton>;
+        return  (<div style={{display:'flex',justifyContent:'space-between'}}>
+          <IconButton onClick={()=>onChangeCliente(params.row)} title='Actualizar Cliente' color={params.row.finalizado? 'success':'secondary'}>
+            {params.row.finalizado? <CheckCircleIcon fontSize="large"/>:<SaveAsIcon fontSize="large"/>} 
+          </IconButton>
+          <IconButton onClick={()=>onDeleteCliente(params.row)} title='Eliminar Cliente' color={'error'}>
+           <DeleteIcon fontSize="large"/>
+          </IconButton>  
+        </div> )
       },
     },
     {field:'nombre',headerName:'Nombre', minWidth:250, align:'left',type:'text',editable:true, headerClassName: 'super-app-theme--header',},
@@ -108,7 +103,7 @@ export const AdminClient = () => {
     <Container maxWidth='XL'>
       <Grid container spacing={1}>
         <Grid item xs={12} md={6}>
-          <Typography variant="h5" color='inherit' sx={{fontWeight:500,bgcolor:'primary.main',borderRadius:1,pl:4,mb:1}}>Nuevo Cliente</Typography>
+          <Typography variant="h5" color='inherit' sx={{fontWeight:500,letterSpacing:'0.5rem',bgcolor:'primary.main',borderRadius:1,pl:4,mb:1}}>Nuevo Cliente</Typography>
           <Box component="form" onSubmit={registrarCliente}>
             <TextField
               margin="dense"
@@ -180,7 +175,7 @@ export const AdminClient = () => {
               variant="contained"
               className='gradient-yard'
               sx={{ mt: 1, mb: 3 }}
-              disabled ={adding}
+              disabled ={loading}
               startIcon={<PersonAddAltIcon/>} 
             >
               Registrar
@@ -188,12 +183,10 @@ export const AdminClient = () => {
           </Box>
         </Grid>
         <Grid item xs={12} md={6} >
-          {/* <Button variant="contained" startIcon={<PersonAddAltIcon/>} className="gradient-yard" onClick={handleNuevo} disabled={registrando} >Registrar Cliente</Button> */}
-          <Typography variant="h5" color='inherit' sx={{fontWeight:500,bgcolor:'primary.main',borderRadius:1,pl:4,mb:1}}>Lista de Clientes</Typography>
+          <Typography variant="h5" color='inherit' sx={{fontWeight:500,letterSpacing:'0.5rem',bgcolor:'primary.main',borderRadius:1,pl:4,mb:1}}>Lista de Clientes</Typography>
           <Box sx={{ height:{xs:330,md:505}, width:{xs:'100%',md:'100%'},justifyContent:'center',mt:2}}>
           <DataGrid
-
-            rows={probando}
+            rows={clientes}
             columns={colClientes}
             initialState={{
               pagination: { paginationModel: { pageSize: 10 } },
@@ -215,7 +208,7 @@ export const AdminClient = () => {
       <Snackbar onClose={handleClose} open={alerta[0]} TransitionComponent={slideAlert} autoHideDuration={6000} anchorOrigin={{vertical:'top',horizontal:'right'}}>
       <Alert severity={alerta[1]} sx={{ width: '100%' }}> {alerta[2]}</Alert>
       </Snackbar>
-      <Backdrop sx={{ color: 'primary.main', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={openSpinner}>
+      <Backdrop sx={{ color: 'primary.main', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={loading}>
         <CircularProgress color="inherit" size='7rem' thickness={5} />
       </Backdrop>
     </Container>

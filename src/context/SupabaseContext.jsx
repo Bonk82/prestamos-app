@@ -18,7 +18,6 @@ export const useSupa = () => {
 export const SupabaseContextProvider = ({ children }) => {
   const [clientes, setClientes] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [adding, setAdding] = useState(false);
   const [avatar, setAvatar] = useState('');
   const [usuario, setUsuario] = useState(null)
 
@@ -86,92 +85,8 @@ export const SupabaseContextProvider = ({ children }) => {
     }
   }
 
-  const createCliente = async ({nombre,apodo,fecha_nacimiento,ci,telefonos,direccion}) => {
-    setAdding(true);
-    try {
-      // const usuario = await supabase.auth.getUser()
-      // console.log(usuario);
-      const { error, data } = await supabase.from('cliente').insert({
-        nombre,
-        apodo,
-        fecha_nacimiento,
-        ci,
-        telefonos,
-        direccion,
-      });
-      console.log('llega aca',error,data,clientes);
-      if (error) {
-        throw error;
-      }
-    } catch (error) {
-      console.log(error.error_description || error.message || error);
-    } finally {
-      setAdding(false);
-    }
-  };
-
-  const getClientes = async () => {
-    setLoading(true);
-    // const user = supabase.auth.user();
-    try {
-      const { data, error } = await supabase
-        .from("cliente")
-        .select("id, nombre, apodo, fecha_nacimiento,ci,telefonos,direccion")
-        // .eq("done", done)
-        .order("id", { ascending: false });
-
-      if (error) {
-        throw error;
-      }
-      setClientes(data);
-      console.log('los clientes',data);
-      return data;
-    } catch (error) {
-      console.log(error.error_description || error.message || error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const updateCliente = async (id, updatedFields) => {
-    try {
-      // const user = supabase.auth.user();
-      console.log('actualizando',id,updatedFields);
-      const { error, data } = await supabase
-        .from("cliente")
-        .update(updatedFields)
-        .eq("id", id)
-      if (error) {
-        throw error;
-      }
-      console.log(error,data);
-    } catch (error) {
-      console.log(error.error_description || error.message || error);
-    }
-  };
-
-  const deleteTask = async (id) => {
-    try {
-      const user = supabase.auth.user();
-
-      const { error, data } = await supabase
-        .from("tasks")
-        .delete()
-        .eq("userId", user.id)
-        .eq("id", id);
-
-      if (error) {
-        throw error;
-      }
-
-      setClientes(clientes.filter((task) => task.id !== data[0].id));
-    } catch (error) {
-      console.log(error.error_description || error.message);
-    }
-  };
-
   const createReg = async (reg,table) => {
-    setAdding(true);
+    setLoading(true);
     try {
       const { error, data } = await supabase.from(table).insert(reg);
       console.log('llega aca',error,data,reg,table);
@@ -181,13 +96,13 @@ export const SupabaseContextProvider = ({ children }) => {
     } catch (error) {
       console.log(error.error_description || error.message || error);
     } finally {
-      setAdding(false);
+      setLoading(false);
     }
   };
 
   const getReg = async (table,col,ascending) => {
-    setLoading(true);
     try {
+      setLoading(true);
       const { data, error } = await supabase
         .from(table)
         .select("*")
@@ -206,6 +121,7 @@ export const SupabaseContextProvider = ({ children }) => {
 
   const updateReg = async (tabla, updatedFields) => {
     try {
+      setLoading(true);
       // const user = supabase.auth.user();
       console.log('actualizando',updatedFields);
       const { error, data } = await supabase
@@ -216,21 +132,25 @@ export const SupabaseContextProvider = ({ children }) => {
       console.log(error,data);
     } catch (error) {
       console.log(error.error_description || error.message || error);
+    } finally {
+      setLoading(false)
     }
   };
 
-  const deleteReg = async (id,tabla) => {
+  const deleteReg = async (tabla,id) => {
+    console.log('deletereg',tabla,id);
     try {
-      const user = supabase.auth.user();
-      const { error, data } = await supabase
+      setLoading(true)
+      const {error} = await supabase
         .from(tabla)
         .delete()
-        .eq("userId", user.id)
         .eq("id", id);
       if (error) throw error;
-      setClientes(clientes.filter((task) => task.id !== data[0].id));
+      setClientes(clientes.filter(c => c.id !== id));
     } catch (error) {
       console.log(error.error_description || error.message);
+    } finally {
+      setLoading(false)
     }
   };
 
@@ -238,12 +158,7 @@ export const SupabaseContextProvider = ({ children }) => {
     <SupaContext.Provider
       value={{
         clientes,
-        getClientes,
-        createCliente,
-        updateCliente,
-        deleteTask,
         loading,
-        adding,
         loginWithMagicLink,
         signInWithEmail,
         signInWithGoogle,
