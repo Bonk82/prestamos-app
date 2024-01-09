@@ -6,7 +6,7 @@ export const Home = () => {
 
   const insertarCliente = async () =>{
     console.log(adding);
-    await createCliente('Francisco Macuaga Acosta','Panchin',new Date(),'1234567','+591 642784','c/ Cañada Strongest detras del coliceo cerrado')
+    await createCliente('Perico de los Palotes','Panchin',new Date(),'1234567','+591 642784','c/ Cañada Strongest detras del coliceo cerrado')
     await getClientes();
     console.log(clientes);
     console.log(adding);

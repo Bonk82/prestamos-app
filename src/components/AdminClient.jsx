@@ -146,7 +146,7 @@ export const AdminClient = () => {
               placeholder="dd-mm-yyyy"
               autoComplete="off"
               InputLabelProps={{
-                style: { top: '-0.8rem' },
+                style: { top: '-0.8rem',fontSize:'0.8rem' },
               }}
             />
             <TextField
