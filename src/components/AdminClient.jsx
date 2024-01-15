@@ -12,7 +12,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from "dayjs";
 import { esES as pikerEs } from '@mui/x-date-pickers/locales';
-
+import 'dayjs/locale/es';
 
 export const AdminClient = () => {
   const {loading,createReg,getReg,updateReg,deleteReg,clientes} = useSupa();
@@ -149,22 +149,12 @@ export const AdminClient = () => {
               id="ci"
               autoComplete="off"
             />
-            {/* <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="fecha_nacimiento"
-              label="Fecha Nacimiento"
-              type="date"
-              id="fecha_nacimiento"
-              placeholder="dd-mm-yyyy"
-              autoComplete="off"
-              InputLabelProps={{
-                style: { top: '-0.8rem',fontSize:'0.8rem' },
-              }}
-            /> */}
             <div style={{width:'100%'}}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <LocalizationProvider
+                dateAdapter={AdapterDayjs}
+                adapterLocale="es"
+                localeText={pikerEs.components.MuiLocalizationProvider.defaultProps.localeText}
+              >
                 <DatePicker name="fecha_nacimiento" label="Fecha Nacimiento *" onChange={onChangeFechaNacimiento} />
               </LocalizationProvider>
             </div>
