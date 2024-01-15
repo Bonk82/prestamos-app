@@ -103,3 +103,7 @@ body{
 .MuiDataGrid-footerContainer p{
   color: aliceblue;
 }
+
+.css-z3c6am-MuiFormControl-root-MuiTextField-root{
+  width: 100%;
+}

@@ -28,7 +28,8 @@ export const primeTheme = createTheme({
         main: '#ad5389'
     },
   },
-    typography:{
-        fontFamily:['monospace','arial'],
-    } 
-},esES);
+  esES,
+  typography:{
+      fontFamily:['monospace','arial'],
+  } 
+});

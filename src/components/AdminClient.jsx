@@ -6,11 +6,18 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useEffect, useState } from "react";
 import {useSupa} from '../context/SupabaseContext'
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from "dayjs";
+import { esES as pikerEs } from '@mui/x-date-pickers/locales';
 
 
 export const AdminClient = () => {
   const {loading,createReg,getReg,updateReg,deleteReg,clientes} = useSupa();
   const [alerta, setAlerta] = useState([false,'success','']);
+  const [fechaNacimiento, setFechaNacimiento] = useState(null)
 
   useEffect(()=>{
     cargarClientes();
@@ -29,7 +36,8 @@ export const AdminClient = () => {
       nombre:data.get('nombre'),
       apodo:data.get('apodo'),
       ci:data.get('ci'),
-      fecha_nacimiento:data.get('fecha_nacimiento'),
+      // fecha_nacimiento:data.get('fecha_nacimiento'),
+      fecha_nacimiento:fechaNacimiento,
       telefonos:data.get('telefonos'),
       direccion:data.get('direccion'),
     }
@@ -99,6 +107,12 @@ export const AdminClient = () => {
     return <Slide {...props} direction="up" />;
   }
 
+  const onChangeFechaNacimiento = (e) =>{
+    console.log('entrando on change',e.$d);
+    console.log('entrando on change',dayjs(e.$d).format('DD/MM/YYYY'));
+    setFechaNacimiento(e)
+  }
+
   return (
     <Container maxWidth='XL'>
       <Grid container spacing={1}>
@@ -135,7 +149,7 @@ export const AdminClient = () => {
               id="ci"
               autoComplete="off"
             />
-            <TextField
+            {/* <TextField
               margin="normal"
               required
               fullWidth
@@ -148,7 +162,12 @@ export const AdminClient = () => {
               InputLabelProps={{
                 style: { top: '-0.8rem',fontSize:'0.8rem' },
               }}
-            />
+            /> */}
+            <div style={{width:'100%'}}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker name="fecha_nacimiento" label="Fecha Nacimiento *" onChange={onChangeFechaNacimiento} />
+              </LocalizationProvider>
+            </div>
             <TextField
               margin="normal"
               required
