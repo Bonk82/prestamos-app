@@ -4,8 +4,8 @@
   /* padding: 2rem; */
   text-align: center;
   min-width: 320px;
-  --primary:'#146C94';
-  --secondary:'#19A7CE'
+  --primary:'#19A7CE'
+  --secondary:'#146C94';
 }
 
 .logo {
@@ -106,4 +106,8 @@ body{
 
 .css-z3c6am-MuiFormControl-root-MuiTextField-root{
   width: 100%;
+}
+
+.menu-activo{
+  background-color: #146C94 !important;
 }

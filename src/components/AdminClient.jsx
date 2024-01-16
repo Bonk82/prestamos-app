@@ -149,7 +149,7 @@ export const AdminClient = () => {
               id="ci"
               autoComplete="off"
             />
-            <div style={{width:'100%'}}>
+            <div style={{width:'100%',margin:'1rem 0 0.5rem 0'}}>
               <LocalizationProvider
                 dateAdapter={AdapterDayjs}
                 adapterLocale="es"
@@ -200,15 +200,11 @@ export const AdminClient = () => {
             initialState={{
               pagination: { paginationModel: { pageSize: 10 } },
             }}
-            // disableSelectionOnClick
-            processRowUpdate={onchange}
-            // onProcessRowUpdateError={handleProcessRowUpdateError}
             experimentalFeatures={{ newEditingApi: true }}
             columnVisibilityModel={{id:false}}
             rowHeight={48}
             pageSizeOptions={[10, 20, 50]}
             pageSize={10}
-            // sortModel={[{field:'fechaPartido'}]}
             localeText={esES.components.MuiDataGrid.defaultProps.localeText}
           />
           </Box>

@@ -45,6 +45,12 @@ export const Navbar = () => {
 
   const handleCloseNavMenu = (e) => {
     console.log(e.target.textContent);
+    document.querySelectorAll('.menu-activo').forEach(b=>{
+      b.classList.remove('menu-activo')
+    })
+    const b = document.getElementById(`menu-${e.target.textContent}`)
+    console.log('rev',b);
+    if (b) b.classList.add('menu-activo')
     setAnchorElNav(null);
     if(e.target.textContent === 'INICIO') navigate('/');
     if(e.target.textContent === 'DASHBOARD'){
@@ -142,8 +148,9 @@ export const Navbar = () => {
             {pages.map((page) => (
               <Button
                 key={page}
+                id={'menu-'+page}
                 onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+                sx={{ my: 2, color: 'white', display: 'block',letterSpacing:'0.4rem',":hover":{bgcolor:'secondary.main'}}}
               >
                 {page}
               </Button>
@@ -153,7 +160,7 @@ export const Navbar = () => {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt={avatar} src={avatar} sx={{backgroundColor:'antiquewhite'}} />
+                <Avatar alt={avatar} src={avatar} sx={{bgcolor:'antiquewhite'}} />
               </IconButton>
             </Tooltip>
             <Menu
