@@ -111,3 +111,12 @@ body{
 .menu-activo{
   background-color: #146C94 !important;
 }
+
+a{
+  color: #19A7CE;
+  text-decoration: none;
+}
+
+a:visited{
+  color: #024768;
+}
