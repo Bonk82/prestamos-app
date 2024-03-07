@@ -120,3 +120,7 @@ a{
 a:visited{
   color: #024768;
 }
+
+.not-found h1{
+  text-shadow:7px 7px 5px rgba(139, 134, 134, 0.5)
+}

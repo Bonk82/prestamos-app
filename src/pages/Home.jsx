@@ -12,7 +12,6 @@ export const Home = () => {
     console.log(adding);
   }
 
-
   return (
     <div>
       <label className="titulo">Inicio</label><br />

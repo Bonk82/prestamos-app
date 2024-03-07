@@ -1,4 +1,5 @@
-import { Alert, Backdrop, Box, Button, CircularProgress, Container, Grid, IconButton, Slide, Snackbar, TextField, Typography } from "@mui/material"
+import { Alert, Backdrop, Box, Button, CircularProgress, Container, Dialog, DialogActions, DialogTitle
+  , Grid, IconButton, Slide, Snackbar, TextField, Typography } from "@mui/material"
 import { DataGrid,esES } from '@mui/x-data-grid';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import SaveAsIcon from '@mui/icons-material/SaveAs';
@@ -16,7 +17,9 @@ import 'dayjs/locale/es';
 export const AdminClient = () => {
   const {loading,createReg,getReg,updateReg,deleteReg,clientes} = useSupa();
   const [alerta, setAlerta] = useState([false,'success','']);
-  const [fechaNacimiento, setFechaNacimiento] = useState(null)
+  const [fechaNacimiento, setFechaNacimiento] = useState(null);
+  const [preguntar, setPreguntar] = useState(false);
+  const [dataPivot, setDataPivot] = useState(null);
 
   useEffect(()=>{
     cargarClientes();
@@ -57,19 +60,25 @@ export const AdminClient = () => {
     }
   }
 
+  const openConfirm = (e) => {
+    setPreguntar(true);
+    setDataPivot(e);
+  }
+
   const onDeleteCliente = async(e) => {
     console.log('delete cliente',e);
-    const r = confirm('Realmente desea eliminar el registro?');
-    if(!r) return false;
     try {
-      // const nuevoObj  = {golesA:Number(e.golesA),golesB:Number(e.golesB),finalizado:true}
       await deleteReg('cliente',e.id);
       setAlerta([true,'success','Cliente eliminado satisfactoriamente!'])
-      return e
+      // return e
     } catch (error) {
       setAlerta([true,'danger','Error al eliminar cliente'])
-    }
+    } finally{
+      setPreguntar(false)
+      setDataPivot(null)
+    } 
   }
+
 
   const colClientes = [
     {field: 'Acciones', headerName: 'Acciones', sortable: false, maxWidth:150,
@@ -78,7 +87,7 @@ export const AdminClient = () => {
           <IconButton onClick={()=>onChangeCliente(params.row)} title='Actualizar Cliente' color={params.row.finalizado? 'success':'secondary'}>
             {params.row.finalizado? <CheckCircleIcon fontSize="large"/>:<SaveAsIcon fontSize="large"/>} 
           </IconButton>
-          <IconButton onClick={()=>onDeleteCliente(params.row)} title='Eliminar Cliente' color={'error'}>
+          <IconButton onClick={()=>openConfirm(params.row)} title='Eliminar Cliente' color={'error'}>
            <DeleteIcon fontSize="large"/>
           </IconButton>  
         </div> )
@@ -111,6 +120,7 @@ export const AdminClient = () => {
     console.log('entrando on change',dayjs(e.$d).format('DD/MM/YYYY'));
     setFechaNacimiento(e)
   }
+
 
   return (
     <Container maxWidth='XL'>
@@ -215,6 +225,13 @@ export const AdminClient = () => {
       <Backdrop sx={{ color: 'primary.main', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={loading}>
         <CircularProgress color="inherit" size='7rem' thickness={5} />
       </Backdrop>
+      <Dialog open={preguntar} onClose={()=>setPreguntar(false)}>
+        <DialogTitle id="dt">{"Realmente desea eliminar el registro?"}</DialogTitle>
+        <DialogActions>
+          <Button onClick={()=>setPreguntar(false)} autoFocus>Cancelar</Button>
+          <Button color="error"  onClick={()=>onDeleteCliente(dataPivot)}>Aceptar</Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   )
 }
