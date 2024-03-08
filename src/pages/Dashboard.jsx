@@ -1,6 +1,7 @@
 // import { Button } from "@mui/material"
 // import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import { AdminClient } from "../components/AdminClient";
+import { AdminLoan } from "../components/AdminLoan";
 import { useSupa } from "../context/SupabaseContext";
 
 
@@ -16,6 +17,7 @@ const Dashboard = () => {
       <Button variant="contained" startIcon={<PersonAddAltIcon/>} className="gradient-primary">Registrar Prestamo</Button> */}
 
       {usuario?.app_metadata.rol === 'admin' && <AdminClient/>}
+      {usuario?.app_metadata.rol === 'admin' && <AdminLoan/>}
     </div>
     
   )

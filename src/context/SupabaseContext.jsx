@@ -17,6 +17,7 @@ export const useSupa = () => {
 // eslint-disable-next-line react/prop-types
 export const SupabaseContextProvider = ({ children }) => {
   const [clientes, setClientes] = useState([]);
+  const [prestamos, setPrestamos] = useState([]);
   const [loading, setLoading] = useState(false);
   const [avatar, setAvatar] = useState('');
   const [usuario, setUsuario] = useState(null)
@@ -90,11 +91,10 @@ export const SupabaseContextProvider = ({ children }) => {
     try {
       const { error, data } = await supabase.from(table).insert(reg);
       console.log('llega aca',error,data,reg,table);
-      if (error) {
-        throw error;
-      }
+      if (error) throw new Error(error.message);
     } catch (error) {
       console.log(error.error_description || error.message || error);
+      throw new Error(error.message);
     } finally {
       setLoading(false);
     }
@@ -103,17 +103,23 @@ export const SupabaseContextProvider = ({ children }) => {
   const getReg = async (table,col,ascending) => {
     try {
       setLoading(true);
-      const { data, error } = await supabase
+      const {data, error}  = await supabase
         .from(table)
         .select("*")
-        .order(col, { ascending});
-
-      if (error) throw error;
-      if(table === 'cliente') setClientes(data);
-      console.log(table,data);
+        .order(col, { ascending})
+        // .join({
+        //   table: 'cliente',
+        //   on: 'prestamo.fid_cliente=prestamo.id',
+        //   type: 'inner', // Tipo de JOIN (izquierda, derecha, interior, exterior)
+        // });
+      console.log(table,data,error);
+      if (error) throw new Error(error.message);
+      if(table == 'cliente') setClientes(data);
+      // if(table == 'prestamo') setPrestamos(data);
       return data;
     } catch (error) {
       console.log(error.error_description || error.message || error);
+      throw new Error(error.message);
     } finally {
       setLoading(false);
     }
@@ -128,10 +134,11 @@ export const SupabaseContextProvider = ({ children }) => {
         .from(tabla)
         .update(updatedFields)
         .eq("id", updatedFields.id)
-      if (error) throw error;
+      if (error) throw new Error(error.message);
       console.log(error,data);
     } catch (error) {
       console.log(error.error_description || error.message || error);
+      throw new Error(error.message);
     } finally {
       setLoading(false)
     }
@@ -158,6 +165,7 @@ export const SupabaseContextProvider = ({ children }) => {
     <SupaContext.Provider
       value={{
         clientes,
+        prestamos,
         loading,
         loginWithMagicLink,
         signInWithEmail,
@@ -170,6 +178,7 @@ export const SupabaseContextProvider = ({ children }) => {
         getReg,
         updateReg,
         deleteReg,
+        setPrestamos
       }}
     >
       {children}
