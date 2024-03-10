@@ -52,7 +52,7 @@
 } */
 body{
   background: linear-gradient(to top, #03081a 0 40%, #024768 170%) !important;
-  height: 100vh;
+  min-height: 100vh;
 }
 .gradient-prime {
   background: linear-gradient(to right, #ad5389, #3c1053)!important;

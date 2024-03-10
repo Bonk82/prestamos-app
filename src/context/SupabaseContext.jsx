@@ -115,7 +115,7 @@ export const SupabaseContextProvider = ({ children }) => {
       console.log(table,data,error);
       if (error) throw new Error(error.message);
       if(table == 'cliente') setClientes(data);
-      // if(table == 'prestamo') setPrestamos(data);
+      if(['prestamo','vw_prestamos'].includes(table)) setPrestamos(data);
       return data;
     } catch (error) {
       console.log(error.error_description || error.message || error);
@@ -178,7 +178,6 @@ export const SupabaseContextProvider = ({ children }) => {
         getReg,
         updateReg,
         deleteReg,
-        setPrestamos
       }}
     >
       {children}

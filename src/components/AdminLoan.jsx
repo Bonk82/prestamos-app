@@ -16,7 +16,7 @@ import 'dayjs/locale/es';
 
 export const AdminLoan = () => {
 
-  const {loading,createReg,getReg,updateReg,deleteReg,clientes,prestamos,setPrestamos} = useSupa();
+  const {loading,createReg,getReg,updateReg,deleteReg,clientes,prestamos} = useSupa();
   const [alerta, setAlerta] = useState([false,'success','']);
   const [fechaDesembolso, setFechaDesembolso] = useState(null);
   const [fechaFinalizacion, setFechaFinalizacion] = useState(null);
@@ -29,18 +29,9 @@ export const AdminLoan = () => {
   },[])
 
   const cargarData = async() =>{
-    const c = await getReg('cliente','id',false);//getClientes();
-    const p = await getReg('prestamo','id',false);//getClientes();
-    adecuarPrestamos(c,p);
-  }
-
-  const adecuarPrestamos = async (c,p) =>{
-    const pivot = []
-    await p.forEach(async p=>{
-      p.nombre = await c.filter(f=>f.id == p.fid_cliente)[0]?.nombre;
-      pivot.push(p);
-    })
-    setPrestamos(pivot)
+    await getReg('cliente','id',false);//getClientes();
+    await getReg('vw_prestamos','id',false);//getClientes();
+    // adecuarPrestamos(c,p);
   }
 
   const registrarPrestamo = async (event) => {
@@ -252,7 +243,7 @@ export const AdminLoan = () => {
           </Box>
         </Grid>
         <Grid item xs={12} md={6} >
-          <Typography variant="h5" color='inherit' sx={{fontWeight:500,letterSpacing:'0.5rem',bgcolor:'primary.main',borderRadius:1,pl:4,mb:1}}>Lista de Clientes</Typography>
+          <Typography variant="h5" color='inherit' sx={{fontWeight:500,letterSpacing:'0.5rem',bgcolor:'primary.main',borderRadius:1,pl:4,mb:1}}>Lista de Préstamos</Typography>
           <Box sx={{ height:{xs:330,md:505}, width:{xs:'100%',md:'100%'},justifyContent:'center',mt:2}}>
           <DataGrid
             rows={prestamos}
