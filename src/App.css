@@ -36,10 +36,6 @@
   }
 }
 
-.card {
-  padding: 2em;
-}
-
 .read-the-docs {
   color: #888;
 }
@@ -123,4 +119,102 @@ a:visited{
 
 .not-found h1{
   text-shadow:7px 7px 5px rgba(139, 134, 134, 0.5)
+}
+
+.grid-cuotas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-gap: 1rem; 
+}
+
+/*******CARD CUOTA*******/
+.card {
+  background-color: #141f24;
+  color: whitesmoke;
+  border-radius: 10px;
+  box-shadow: 10px 10px 20px rgba(83, 148, 201, 0.4), 0 6px 6px rgba(28, 108, 173, 0.5);
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+  transform-style: preserve-3d;
+  border:1px solid steelblue;
+  display: grid;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card-header {
+  border-bottom: 2px solid steelblue;
+  margin-bottom: 15px;
+  padding: 0.5rem 1rem;
+  min-height: 150px;
+}
+
+.card-title {
+  font-size: 24px;
+  margin: 0;
+}
+
+.card-subtitle {
+  font-size: 20px;
+  margin: 4px 0;
+  color: #b2bfca;
+}
+
+.card-info {
+  font-size: 24px;
+  margin: 4px 0;
+  color: #dde7f0;
+  letter-spacing: 2px;
+  font-style: italic;
+}
+
+.card-body {
+  font-size: 18px;
+  padding: 2px 5px;
+}
+
+.card-body p {
+  margin: 0 0 5px 0;
+}
+
+.card-body .icon {
+  position: absolute;
+  top: auto;
+  bottom: 5px;
+  right: 5px;
+  z-index: -1;
+  font-size: 180px;
+  color: rgba(0, 0, 0, 0.15);
+}
+
+.card-body div, .card-header div{
+  display: flex;
+  justify-content: space-between;
+}
+.card-body kbd {
+  background-color: #14abf1;
+  border: 1px solid #0379b5;
+  color:whitesmoke;
+  padding: 5px 12px;
+  font-size: 2rem;
+  font-style: italic;
+  border-radius: 8px;
+}
+.card-body input{
+  font-size: large;
+  color:#6fd8f5;
+}
+.card-footer{
+  align-self: flex-end;
+  min-height: 4rem;
+  background-color: #0379b5;
+  border-radius: 0 0 8px 8px;
+  display: flex;
+}
+.card-footer button{
+  border-radius: 0 0 10px 10px !important;
+  padding: 20px 10px;
+  align-self: flex-end;
 }

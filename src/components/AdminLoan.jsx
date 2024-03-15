@@ -28,10 +28,9 @@ export const AdminLoan = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
-  const cargarData = async() =>{
-    await getReg('cliente','id',false);//getClientes();
-    await getReg('vw_prestamos','id',false);//getClientes();
-    // adecuarPrestamos(c,p);
+  const cargarData = () =>{
+    getReg('cliente','id',false);
+    getReg('vw_prestamos','id',false);
   }
 
   const registrarPrestamo = async (event) => {
@@ -47,6 +46,7 @@ export const AdminLoan = () => {
       dia_pago:data.get('dia_pago'),
       estado:'ACTIVO',
       referencia:data.get('referencia'),
+      saldo_capital:data.get('monto'),
     }
     console.log('new prestamo',newPrestamo);
     try {
