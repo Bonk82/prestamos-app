@@ -9,16 +9,16 @@ import { CardFee } from "../components/CardFee";
 
 
 const Prestamo = () => {
-  const {getReg} = useSupa();
+  const {getReg,cuotas} = useSupa();
   const [cuotasMes, setCuotasMes] = useState([])
 
   useEffect(()=>{
     cargarData();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[])
+  },[cuotas])
 
   const cargarData = async () =>{
-    const pivot = await getReg('vw_cuotas','dia_pago',false);
+    const pivot = await getReg('vw_cuotas','dia_pago',true);
     armarCuotas(pivot)
     console.log('las cuotas',pivot);
   }
@@ -26,7 +26,7 @@ const Prestamo = () => {
   const armarCuotas = async (data) =>{
     const hoy = new Date()
     await data.map(c=>{
-      c.fecha_cuota = new Date(hoy.getFullYear(),hoy.getMonth(),c.dia_pago).toLocaleDateString();
+      c.fecha_cuota = new Date(hoy.getFullYear(),hoy.getMonth(),c.dia_pago);
       c.monto_cuota = c.saldo_capital * (c.porcentaje_interes/100);
     })
     setCuotasMes(data);
@@ -35,6 +35,7 @@ const Prestamo = () => {
   return (
     <div className='grid-cuotas'>
       {cuotasMes.length>0 && cuotasMes.map((c,i)=>{
+        console.log('repintando',i,c);
         return(
           <CardFee key={i} cuota={c} ></CardFee>
         )

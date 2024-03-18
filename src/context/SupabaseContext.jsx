@@ -18,6 +18,7 @@ export const useSupa = () => {
 export const SupabaseContextProvider = ({ children }) => {
   const [clientes, setClientes] = useState([]);
   const [prestamos, setPrestamos] = useState([]);
+  const [cuotas, setCuotas] = useState([]);
   const [loading, setLoading] = useState(false);
   const [avatar, setAvatar] = useState('');
   const [usuario, setUsuario] = useState(null)
@@ -89,9 +90,10 @@ export const SupabaseContextProvider = ({ children }) => {
   const createReg = async (reg,table) => {
     setLoading(true);
     try {
-      const { error, data } = await supabase.from(table).insert(reg);
+      const { error, data } = await supabase.from(table).insert(reg).select();
       console.log('llega aca',error,data,reg,table);
       if (error) throw new Error(error.message);
+      if(!error && table == 'cuota') setCuotas(data);
     } catch (error) {
       console.log(error.error_description || error.message || error);
       throw new Error(error.message);
@@ -166,6 +168,7 @@ export const SupabaseContextProvider = ({ children }) => {
       value={{
         clientes,
         prestamos,
+        cuotas,
         loading,
         loginWithMagicLink,
         signInWithEmail,

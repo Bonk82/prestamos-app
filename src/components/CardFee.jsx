@@ -1,13 +1,24 @@
-import { Alert, Backdrop, Button, Chip, CircularProgress, Slide, Snackbar, TextField } from '@mui/material';
+import { Alert, Backdrop, Button, CircularProgress, IconButton, Slide, Snackbar, TextField } from '@mui/material';
 import PropTypes from 'prop-types';
 import { useSupa } from '../context/SupabaseContext';
 import TimelineIcon from '@mui/icons-material/Timeline';
-import { useState } from 'react';
-
+import { useEffect, useState } from 'react';
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 
 export const CardFee = ({cuota}) => {
   const {loading,createReg,updateReg} = useSupa();
   const [alerta, setAlerta] = useState([false,'success','']);
+
+  useEffect(() => {
+    evaluateState()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+  
+  const evaluateState = () =>{
+    if(cuota.fecha_pago) document.getElementById('kbd'+cuota.id_prestamo).classList.add('paid')
+    if(!cuota.fecha_pago && (new Date() > new Date(cuota.fecha_cuota)))  document.getElementById('kbd'+cuota.id_prestamo).classList.add('delay')
+  }
+
   const handleClose = ()=>{
     setAlerta([false,'success','vacio']);
   }
@@ -16,14 +27,10 @@ export const CardFee = ({cuota}) => {
     return <Slide {...props} direction="up" />;
   }
 
-  const registrarCuota = async (event) => {
-    event.preventDefault();
-    console.log('el event',event);
-
-    const newPrestamo = cuota
-    console.log('new cuota',newPrestamo);
+  const registrarCuota = async (data) => {
+    console.log('new cuota',data);
     try {
-      await createReg(newPrestamo,'prestamo');
+      await createReg(data,'cuota');
       setAlerta([true,'success','Cuota registrada con éxito!'])
       // await cargarData();
     } catch (error) {
@@ -31,11 +38,10 @@ export const CardFee = ({cuota}) => {
     }
   }
 
-  const onChangeCuota = async() => {
-    console.log('cambios cuota',cuota);
+  const onChangeCuota = async(data) => {
+    console.log('cambios cuota',data);
     try {
-      delete cuota.nombre
-      await updateReg('cuota',cuota);
+      await updateReg('cuota',data);
       setAlerta([true,'success','Cuota actualizada con éxito!'])
       // return e
     } catch (error) {
@@ -51,34 +57,55 @@ export const CardFee = ({cuota}) => {
     }
   }
 
+  const hanldeSave = () =>{
+    const laNuevaCuota = {
+      fecha_cuota:cuota.fecha_cuota,
+      fecha_pago:new Date(),
+      monto_cuota:cuota.monto_cuota,
+      monto_pago:document.getElementById('mc'+cuota.id_prestamo)?.value,
+      fid_prestamo:cuota.id_prestamo
+    }
+    console.log('la cuota',cuota);
+    if(cuota.id){
+      laNuevaCuota.id = cuota.id;
+      onChangeCuota(laNuevaCuota);
+    }else{
+      registrarCuota(laNuevaCuota);
+    } 
+
+  }
+
   return (
     <div className="card">
       <div className="card-header">
-        <h3 className="card-title">{cuota.nombre}</h3>
+        <h2 className="card-title">{cuota.apodo}</h2>
         <h4 className="card-subtitle">{cuota.referencia}</h4>
         <div>
           <h4 className="card-info">{cuota.monto}</h4>
-          <h4 className="card-info">{new Date(cuota.fecha_desembolso).toLocaleDateString()}</h4>
+          <h4 className="card-info">{new Date(cuota.fecha_desembolso + ' 05:00').toLocaleDateString()}</h4>
           {/* <button *ngIf="row.informe" class="btn btn-info" title="Descargar" (click)="obtenerArchivo(row.informe,'auditoria',row.id_cite)"><i class="fa fa-print"></i> Informe</button> */}
         </div>
       </div>
       <div className="card-body">
-        <p>Fecha Cuota: <kbd>{cuota.fecha_cuota}</kbd></p>
-        <TextField id="monto_cuota" label="Monto Cuota" onInput={handleInput} fullWidth/>
+        <p>Fecha {cuota.fecha_pago ? 'Pago':'Cuota'}: <kbd id={'kbd'+cuota.id_prestamo}>{cuota.fecha_pago ? new Date(cuota.fecha_pago + ' 05:00').toLocaleDateString() : new Date(cuota.fecha_cuota).toLocaleDateString()}</kbd></p>
+        <div>
+          <TextField id={'mc'+cuota.id_prestamo} label="Monto Cuota" onInput={handleInput}sx={{width:'80%'}} defaultValue={cuota.monto_pago || cuota.monto_cuota}/>
+          <IconButton disabled ={loading} color="primary" onClick={hanldeSave}><MonetizationOnIcon fontSize='large'/></IconButton>
+        </div>
       </div>
       <div className="card-footer">
         <Button
-            type="button"
-            fullWidth
-            variant="contained"
-            className='gradient-yard'
-            // color='info'
-            // sx={{ mt: 1, mb: 3 }}
-            disabled ={loading}
-            startIcon={<TimelineIcon fontSize='large'/>} 
-          >
-            Historial
-          </Button>
+          type="button"
+          fullWidth
+          variant="contained"
+          className='gradient-yard'
+          // color='info'
+          // sx={{ mt: 1, mb: 3 }}
+          disabled ={loading}
+          startIcon={<TimelineIcon fontSize='large'/>} 
+        >
+          Historial
+        </Button>
       </div>
       <Snackbar onClose={handleClose} open={alerta[0]} TransitionComponent={slideAlert} autoHideDuration={6000} anchorOrigin={{vertical:'top',horizontal:'right'}}>
       <Alert severity={alerta[1]} sx={{ width: '100%' }}> {alerta[2]}</Alert>
@@ -100,11 +127,12 @@ CardFee.propTypes = {
     fecha_desembolso: PropTypes.string,
     fid_cliente : PropTypes.number,
     id: PropTypes.number,
-    fecha_cuota: PropTypes.string,
+    fecha_cuota: PropTypes.instanceOf(Date),
     fecha_pago: PropTypes.string,
     monto_cuota: PropTypes.number,
     monto_pago: PropTypes.number,
     fid_prestamo: PropTypes.number,
     referencia:PropTypes.string,
+    id_prestamo:PropTypes.number
   }).isRequired,
 };
