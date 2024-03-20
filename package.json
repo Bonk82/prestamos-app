@@ -17,6 +17,7 @@
     "@mui/x-data-grid": "^6.4.0",
     "@mui/x-date-pickers": "^6.19.2",
     "@supabase/supabase-js": "^2.21.0",
+    "carbone": "^3.5.5",
     "dayjs": "^1.11.10",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

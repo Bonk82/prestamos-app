@@ -28,6 +28,7 @@ const Prestamo = () => {
     await data.map(c=>{
       c.fecha_cuota = new Date(hoy.getFullYear(),hoy.getMonth(),c.dia_pago);
       c.monto_cuota = c.saldo_capital * (c.porcentaje_interes/100);
+      if(!c.porcentaje_interes) c.monto_cuota = c.saldo_capital;
     })
     setCuotasMes(data);
   }
