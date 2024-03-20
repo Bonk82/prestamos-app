@@ -195,7 +195,7 @@ a:visited{
 }
 .card-body kbd {
   background-color: #14abf1;
-  border: 1px solid #0379b5;
+  border: 2px solid #0379b5;
   color:whitesmoke;
   padding: 2px 8px;
   font-size: 2rem;

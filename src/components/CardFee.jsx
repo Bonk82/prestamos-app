@@ -1,12 +1,17 @@
-import { Alert, Backdrop, Button, CircularProgress, IconButton, Slide, Snackbar, TextField } from '@mui/material';
+import { Alert, Backdrop, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, Slide, Snackbar, TextField } from '@mui/material';
 import PropTypes from 'prop-types';
 import { useSupa } from '../context/SupabaseContext';
 import TimelineIcon from '@mui/icons-material/Timeline';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 export const CardFee = ({cuota}) => {
   const {loading,createReg,updateReg} = useSupa();
+  const [open, setOpen] = useState(false)
   const [alerta, setAlerta] = useState([false,'success','']);
 
   useEffect(() => {
@@ -57,7 +62,7 @@ export const CardFee = ({cuota}) => {
     }
   }
 
-  const hanldeSave = () =>{
+  const handleSave = () =>{
     const laNuevaCuota = {
       fecha_cuota:cuota.fecha_cuota,
       fecha_pago:new Date(),
@@ -72,7 +77,14 @@ export const CardFee = ({cuota}) => {
     }else{
       registrarCuota(laNuevaCuota);
     } 
+  }
 
+  const handleHistory = ()=>{
+    setOpen(true)
+  }
+
+  const handleCloseHistory = ()=>{
+    setOpen(false)
   }
 
   return (
@@ -90,7 +102,7 @@ export const CardFee = ({cuota}) => {
         <p>Fecha {cuota.fecha_pago ? 'Pago':'Cuota'}: <kbd id={'kbd'+cuota.id_prestamo}>{cuota.fecha_pago ? new Date(cuota.fecha_pago + ' 05:00').toLocaleDateString() : new Date(cuota.fecha_cuota).toLocaleDateString()}</kbd></p>
         <div>
           <TextField id={'mc'+cuota.id_prestamo} label="Monto Cuota" onInput={handleInput}sx={{width:'80%'}} defaultValue={cuota.monto_pago || cuota.monto_cuota}/>
-          <IconButton disabled ={loading} color="primary" onClick={hanldeSave}><MonetizationOnIcon fontSize='large'/></IconButton>
+          <IconButton disabled ={loading} color="primary" onClick={handleSave}><MonetizationOnIcon fontSize='large'/></IconButton>
         </div>
       </div>
       <div className="card-footer">
@@ -101,6 +113,7 @@ export const CardFee = ({cuota}) => {
           className='gradient-yard'
           // color='info'
           // sx={{ mt: 1, mb: 3 }}
+          onClick={handleHistory}
           disabled ={loading}
           startIcon={<TimelineIcon fontSize='large'/>} 
         >
@@ -113,6 +126,26 @@ export const CardFee = ({cuota}) => {
       <Backdrop sx={{ color: 'primary.main', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={loading}>
         <CircularProgress color="inherit" size='7rem' thickness={5} />
       </Backdrop>
+      <Dialog
+        open={open}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleCloseHistory}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>{"Use Google's location service?"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            Let Google help apps determine location. This means sending anonymous
+            location data to Google, even when no apps are running.
+          </DialogContentText>
+          <p>porbando</p>
+        </DialogContent>
+        <DialogActions>
+          <Button variant='outlined' color='info' onClick={handleCloseHistory}>Cerrar</Button>
+          <Button variant='outlined' color='success' onClick={handleCloseHistory}>Reporte</Button>
+        </DialogActions>
+      </Dialog>
     </div>
   )
 }
