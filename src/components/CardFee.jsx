@@ -2,8 +2,9 @@ import { Alert, Backdrop, Button, CircularProgress, Dialog, DialogActions, Dialo
 import PropTypes from 'prop-types';
 import { useSupa } from '../context/SupabaseContext';
 import TimelineIcon from '@mui/icons-material/Timeline';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import html2canvas from 'html2canvas';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -13,6 +14,8 @@ export const CardFee = ({cuota}) => {
   const {loading,createReg,updateReg} = useSupa();
   const [open, setOpen] = useState(false)
   const [alerta, setAlerta] = useState([false,'success','']);
+  
+  const divRef = useRef(null);
 
   useEffect(() => {
     evaluateState()
@@ -87,6 +90,24 @@ export const CardFee = ({cuota}) => {
     setOpen(false)
   }
 
+  const print = ()=>{
+    const div = divRef.current;
+  
+    html2canvas(div).then(canvas => {
+      canvas.toBlob(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'documento.pdf';
+        document.body.appendChild(a);
+        a.click();
+
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+      }, 'application/pdf');
+    });
+  }
+
   return (
     <div className="card">
       <div className="card-header">
@@ -127,6 +148,7 @@ export const CardFee = ({cuota}) => {
         <CircularProgress color="inherit" size='7rem' thickness={5} />
       </Backdrop>
       <Dialog
+        ref={divRef}
         open={open}
         TransitionComponent={Transition}
         keepMounted
@@ -139,11 +161,11 @@ export const CardFee = ({cuota}) => {
             Let Google help apps determine location. This means sending anonymous
             location data to Google, even when no apps are running.
           </DialogContentText>
-          <p>porbando</p>
+          <p id='unavaina' style={{color:'red'}}>probando reporte JSP</p>
         </DialogContent>
         <DialogActions>
           <Button variant='outlined' color='info' onClick={handleCloseHistory}>Cerrar</Button>
-          <Button variant='outlined' color='success' onClick={handleCloseHistory}>Reporte</Button>
+          <Button variant='outlined' color='success' onClick={print}>Reporte</Button>
         </DialogActions>
       </Dialog>
     </div>
